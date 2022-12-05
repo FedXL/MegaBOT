@@ -16,7 +16,6 @@ from utils import ShopValid
 
 name = NAME
 
-
 try:
     mas = valut()
     eur = (mas[1])
@@ -24,7 +23,6 @@ try:
 except:
     eur = 666
     use = 666
-
 
 logging.basicConfig(level=logging.INFO)
 storage = MemoryStorage()
@@ -70,7 +68,6 @@ class Calculator1(StatesGroup):
     result = State()
 
 
-
 idd = 716336613
 
 
@@ -86,25 +83,96 @@ async def welcome_message(message: types.Message, state: FSMContext):
                            parse_mode=ParseMode.MARKDOWN)
 
 
+@dp.message_handler(commands=['info'], state="*")
+async def info_func(message: types.Message, state: FSMContext):
+    """"""
+    value = await state.get_state()
+    print(value)
+
+
+@dp.message_handler(Text(equals="Назад"), state="*")
+async def back_btn_function(message: types.Message, state: FSMContext):
+    value = await state.get_state()
+    match value:
+        case "TradeInn:login":
+            await state.finish()
+            await message.answer("Вы вернулись назад в меню заказа",
+                                 reply_markup=nv.SuperMenu.invoiceMenu)
+        case "TradeInn:pas":
+            await state.finish()
+            await message.answer("Вы вернулись назад в меню заказа",
+                                 reply_markup=nv.SuperMenu.invoiceMenu)
+        case "BuyOut:shop":
+            await state.finish()
+            await message.answer('Вы вернулись назад в меню заказа!',
+                                 reply_markup=nv.SuperMenu.invoiceMenu)
+        case "BuyOut:login":
+            await state.finish()
+            await message.answer('Вы вернулись назад в меню заказа!',
+                                 reply_markup=nv.SuperMenu.invoiceMenu)
+        case "OrderStates:order_kaz_choice":
+            await state.finish()
+            await message.answer("Меню выбора заказа",
+                                 reply_markup=nv.SuperMenu.invoiceMenu)
+        case "OrderStates:order_kaz_ch1_shop_name":
+            await OrderStates.order_kaz_choice.set()
+            await message.answer('Вы вернулись назад! Теперь нам нужно получить либо доступ'
+                                 ' к корзине в магазине, '
+                                 'либо предоставить прямые ссылки на товары. Выбор за вами:',
+                                 reply_markup=nv.SuperMenu.kaz_choice_menu)
+
+        case "OrderStates:ordder_kaz_ch2_href":
+            await OrderStates.order_kaz_choice.set()
+            await message.answer('Вы вернулись назад! Теперь нам нужно получить либо доступ'
+                                 ' к корзине в магазине, '
+                                 'либо прямые ссылки на товары. Выбор за вами:',
+                                 reply_markup=nv.SuperMenu.kaz_choice_menu)
+
+        case "OrderStates:order_kaz_ch1_loggin":
+            await state.finish()
+            await OrderStates.order_kaz_choice.set()
+            await message.answer('Вы вернулись назад! Теперь нам нужно получить либо доступ'
+                                 ' к корзине в магазине, '
+                                 'либо прямые ссылки на товары. Выбор за вами:',
+                                 reply_markup=nv.SuperMenu.kaz_choice_menu)
+
+        case "OrderStates:order_kaz_ch1_password":
+            await state.finish()
+            await OrderStates.order_kaz_choice.set()
+            await message.answer('Вы вернулись назад! Теперь нам нужно получить либо доступ'
+                                 ' к корзине в магазине, '
+                                 'либо прямые ссылки на товары. Выбор за вами:',
+                                 reply_markup=nv.SuperMenu.kaz_choice_menu)
+
+        case "FAQ:start":
+            await state.finish()
+            await message.answer('Вы вернулись назад в меню консультаций!',
+                                 reply_markup=nv.SuperMenu.consMenu)
+
+        case "Calculator:eurobacs":
+            await state.finish()
+            await message.answer("Вы вернулись в меню консультаций.", reply_markup=nv.SuperMenu.consMenu)
+
+        case "Calculator:getmoney":
+            await state.finish()
+            await message.answer("Вы вернулись в меню консультаций.", reply_markup=nv.SuperMenu.consMenu)
+
+        case "Calculator1:eurobacs":
+            await state.finish()
+            await message.answer("Вы вернулись в меню консультаций.", reply_markup=nv.SuperMenu.consMenu)
+
+        case "Calculator1:getmoney":
+            await state.finish()
+            await message.answer("Вы вернулись в меню консультаций.", reply_markup=nv.SuperMenu.consMenu)
+        case None:
+            await message.answer('Вы вернулись в главное меню', reply_markup=nv.SuperMenu.menu)
+
+
 @dp.message_handler(Text(equals='Заказ Tradeinn'), state=None)
 async def tradeinn(message: types.Message):
     await message.answer("Прекрасно! Тогда понадобится логин и пароль от вашего личного кабинета на Tradeinn")
     await TradeInn.login.set()
     await message.answer('Введите логин: ', reply_markup=nv.SuperMenu.cancel)
-
-
-@dp.message_handler(Text(equals="Назад"), state=TradeInn.login)
-async def back_btn_order_kaz(message: types.Message, state: FSMContext):
-    await state.finish()
-    await message.answer('Вы вернулись назад в меню заказа!',
-                         reply_markup=nv.SuperMenu.invoiceMenu)
-
-
-@dp.message_handler(Text(equals="Назад"), state=TradeInn.pas)
-async def back_btn_order_kaz(message: types.Message, state: FSMContext):
-    await state.finish()
-    await message.answer('Вы вернулись назад в меню заказа!',
-                         reply_markup=nv.SuperMenu.invoiceMenu)
 
 
 @dp.message_handler(state=TradeInn.login)
@@ -137,20 +205,6 @@ async def buyout(message: types.Message):
                          "Название сайта , пароль и логин от личного кабинета.")
     await message.answer('Введите сайт магазина:', reply_markup=nv.SuperMenu.cancel)
     await BuyOut.shop.set()
-
-
-@dp.message_handler(Text(equals="Назад"), state=BuyOut.shop)
-async def back_btn_order_kaz(message: types.Message, state: FSMContext):
-    await state.finish()
-    await message.answer('Вы вернулись назад в меню заказа!',
-                         reply_markup=nv.SuperMenu.invoiceMenu)
-
-
-@dp.message_handler(Text(equals="Назад"), state=BuyOut.login)
-async def back_btn_order_kaz(message: types.Message, state: FSMContext):
-    await state.finish()
-    await message.answer('Вы вернулись назад в меню заказа!',
-                         reply_markup=nv.SuperMenu.invoiceMenu)
 
 
 @dp.message_handler(state=BuyOut.shop)
@@ -197,12 +251,6 @@ async def order_kaz(message: types.Message):
                          reply_markup=nv.SuperMenu.kaz_choice_menu)
 
 
-@dp.message_handler(Text(equals="Назад"), state=OrderStates.order_kaz_choice)
-async def back_btn_order_kaz(message: types.Message, state: FSMContext):
-    await state.finish()
-    await message.answer("Меню выбора заказа", reply_markup=nv.SuperMenu.invoiceMenu)
-
-
 @dp.message_handler(state=OrderStates.order_kaz_choice)
 async def order_kaz_choice(message: types.Message, state: FSMContext):
     if message.text == "Предоставлю доступ в личный кабинет":
@@ -223,74 +271,6 @@ async def order_kaz_choice(message: types.Message, state: FSMContext):
         await OrderStates.ordder_kaz_ch2_href.set()
     else:
         await message.reply('Непонятная команда, используйте кнопки меню для ответа')
-
-
-@dp.message_handler(Text(equals="Назад"),
-                    state=OrderStates.order_kaz_ch1_shop_name)
-async def back_btn_order_kaz(message: types.Message, state: FSMContext):
-    await OrderStates.order_kaz_choice.set()
-    await message.answer('Вы вернулись назад! Теперь нам нужно получить либо доступ'
-                         ' к корзине в магазине, '
-                         'либо прямые ссылки на товары. Выбор за вами:',
-                         reply_markup=nv.SuperMenu.kaz_choice_menu)
-
-
-@dp.message_handler(Text(equals="Назад"), state=OrderStates.ordder_kaz_ch2_href)
-async def back_btn_order_kaz(message: types.Message, state: FSMContext):
-    await OrderStates.order_kaz_choice.set()
-    await message.answer('Вы вернулись назад! Теперь нам нужно получить либо доступ'
-                         ' к корзине в магазине, '
-                         'либо прямые ссылки на товары. Выбор за вами:',
-                         reply_markup=nv.SuperMenu.kaz_choice_menu)
-
-
-@dp.message_handler(Text(equals="Назад"),
-                    state=OrderStates.order_kaz_ch1_shop_name)
-async def back_btn_order_kaz(message: types.Message, state: FSMContext):
-    await state.finish()
-    await OrderStates.order_kaz_choice.set()
-    await message.answer('Вы вернулись назад! Теперь нам нужно получить либо доступ'
-                         ' к корзине в магазине, '
-                         'либо прямые ссылки на товары. Выбор за вами:',
-                         reply_markup=nv.SuperMenu.kaz_choice_menu)
-
-
-@dp.message_handler(Text(equals="Назад"), state=OrderStates.ordder_kaz_ch2_href)
-async def back_btn_order_kaz(message: types.Message, state: FSMContext):
-    await state.finish()
-    await OrderStates.order_kaz_choice.set()
-    await message.answer('Вы вернулись назад! Теперь нам нужно получить либо доступ'
-                         ' к корзине в магазине, '
-                         'либо прямые ссылки на товары. Выбор за вами:',
-                         reply_markup=nv.SuperMenu.kaz_choice_menu)
-
-
-@dp.message_handler(Text(equals="Назад"), state=OrderStates.order_kaz_ch1_loggin)
-async def back_btn_order_kaz(message: types.Message, state: FSMContext):
-    await state.finish()
-    await OrderStates.order_kaz_choice.set()
-    await message.answer('Вы вернулись назад! Теперь нам нужно получить либо доступ'
-                         ' к корзине в магазине, '
-                         'либо прямые ссылки на товары. Выбор за вами:',
-                         reply_markup=nv.SuperMenu.kaz_choice_menu)
-
-
-@dp.message_handler(Text(equals="Назад"),
-                    state=OrderStates.order_kaz_ch1_password)
-async def back_btn_order_kaz(message: types.Message, state: FSMContext):
-    await state.finish()
-    await OrderStates.order_kaz_choice.set()
-    await message.answer('Вы вернулись назад! Теперь нам нужно получить либо доступ'
-                         ' к корзине в магазине, '
-                         'либо прямые ссылки на товары. Выбор за вами:',
-                         reply_markup=nv.SuperMenu.kaz_choice_menu)
-
-
-@dp.message_handler(Text(equals="Назад"), state=FAQ.start)
-async def back_btn_order_kaz(message: types.Message, state: FSMContext):
-    await state.finish()
-    await message.answer('Вы вернулись назад в меню консультаций!',
-                         reply_markup=nv.SuperMenu.consMenu)
 
 
 @dp.message_handler(state=OrderStates.order_kaz_ch1_shop_name)
@@ -343,6 +323,7 @@ async def get_shop_name(message: types.Message, state):
     await message.answer('Ваш заказ отправлен! Ожидайте, оператор с вами свяжется в ближайшее время!',
                          reply_markup=nv.SuperMenu.cancel)
 
+
 @dp.message_handler(Text(equals='Завершить заказ'),
                     state=OrderStates.ordder_kaz_ch2_href)
 async def href(message: types.Message, state: FSMContext):
@@ -358,6 +339,7 @@ async def href(message: types.Message, state: FSMContext):
         await message.answer('Ваш заказ отправлен! Ожидайте, оператор с вами свяжется в ближайшее время!')
         await message.answer(text, parse_mode=ParseMode.MARKDOWN, reply_markup=nv.SuperMenu.cancel)
         await state.finish()
+
 
 @dp.message_handler(state=OrderStates.ordder_kaz_ch2_href)
 async def href(message: types.Message, state: FSMContext):
@@ -403,8 +385,9 @@ async def href(message: types.Message, state: FSMContext):
                                      f'Или оформите ещё один заказ.',
                                      reply_markup=nv.SuperMenu.kaz_order)
 
+
 @dp.message_handler(Text(equals='FAQ'), state=None)
-async def fAq(message: types.Message):
+async def hello_faq(message: types.Message):
     await message.answer(md.text(
         md.text("Добро пожаловать в наш ", md.bold('FAQ'), "!"),
         md.text('По каждому из способов доставки мы имеем исчерпывающее руководство.'),
@@ -416,7 +399,7 @@ async def fAq(message: types.Message):
 
 
 @dp.message_handler(state=FAQ.start)
-async def Faq(message: types.Message):
+async def generate_content_faq(message: types.Message):
     if message.text == "Покупка транзитом через Казахстан":
         await message.answer(md.text(
             md.text("*1й Вариант. Покупка транзитом через Казахстан.*"),
@@ -455,7 +438,8 @@ async def Faq(message: types.Message):
         await message.answer(md.text(
             md.text("Забирать в моём сервисе по адресу Москва; ул.Полтавская 35 или вышлю напрямую на ваш адрес."),
             md.text(
-                "В этой схеме мы оплачиваем товар, оформляем все необходимые документы для таможни и организуем его отправку в Россию при получении."
+                "В этой схеме мы оплачиваем товар, оформляем все необходимые документы для таможни и организуем его "
+                "отправку в Россию при получении. "
                 "Отправка из Казахстана страхуется на полную сумму, срок отправки с момента получения 5 дней."),
             md.text(" "),
             md.text(
@@ -473,8 +457,8 @@ async def Faq(message: types.Message):
         )
     elif message.text == "Покупка на Tradeinn":
         await message.answer(text_1,
-            parse_mode=ParseMode.MARKDOWN
-        )
+                             parse_mode=ParseMode.MARKDOWN
+                             )
         await message.answer(md.code("Тут будет инлайн кнопа сделать заказ"), parse_mode=ParseMode.MARKDOWN)
         await message.answer(md.text(
             md.text("*Сроки доставки *", "3-5 недель. ",
@@ -570,18 +554,6 @@ async def Faq(message: types.Message):
                             reply_markup=nv.SuperMenu.faqMenu)
 
 
-@dp.message_handler(Text(equals="Назад"), state=Calculator.eurobacs)
-async def goback(message: types.Message, state: FSMContext):
-    await state.finish()
-    await message.answer("Вы вернулись в меню консультаций.", reply_markup=nv.SuperMenu.consMenu)
-
-
-@dp.message_handler(Text(equals="Назад"), state=Calculator.getmoney)
-async def goback(message: types.Message, state: FSMContext):
-    await state.finish()
-    await message.answer("Вы вернулись в меню консультаций.", reply_markup=nv.SuperMenu.consMenu)
-
-
 @dp.message_handler(state=Calculator.eurobacs)
 async def dollareurocalc(message: types.Message, state: FSMContext):
     if message.text in ("Евро", "Доллар"):
@@ -616,9 +588,9 @@ async def getmoney(message: types.Message, state: FSMContext):
         return
     if int(message.text) > 1000:
         total1 = int(message.text) * 1.25 * valuta + 1000 + \
-            (int(message.text) - 1000) * 0.15 * 1.25 * valuta
+                 (int(message.text) - 1000) * 0.15 * 1.25 * valuta
         total2 = int(message.text) * 1.25 * valuta + 3000 + \
-            (int(message.text) - 1000) * 0.15 * 1.25 * valuta
+                 (int(message.text) - 1000) * 0.15 * 1.25 * valuta
         text1 = "Cумма к оплате вместе с таможенной пошлиной составит:"
     else:
         total1 = int(message.text) * 1.25 * valuta + 1000
@@ -651,18 +623,6 @@ async def getmoney(message: types.Message, state: FSMContext):
         sep="\n"),
         parse_mode=ParseMode.MARKDOWN,
         reply_markup=nv.SuperMenu.cancel)
-
-
-@dp.message_handler(Text(equals="Назад"), state=Calculator1.eurobacs)
-async def goback1(message: types.Message, state: FSMContext):
-    await state.finish()
-    await message.answer("Вы вернулись в меню консультаций.", reply_markup=nv.SuperMenu.consMenu)
-
-
-@dp.message_handler(Text(equals="Назад"), state=Calculator1.getmoney)
-async def goback2(message: types.Message, state: FSMContext):
-    await state.finish()
-    await message.answer("Вы вернулись в меню консультаций.", reply_markup=nv.SuperMenu.consMenu)
 
 
 @dp.message_handler(state=Calculator1.eurobacs)
@@ -736,8 +696,6 @@ async def masmes(message: types.Message):
                              parse_mode=ParseMode.MARKDOWN)
     elif message.text == 'Koнсультация':
         await message.answer('Koнсультация', reply_markup=nv.SuperMenu.consMenu)
-    elif message.text == 'Назад':
-        await message.answer('Вы вернулись в главное меню', reply_markup=nv.SuperMenu.menu)
     elif message.text == "Посчитать примерную стоимость заказа транзитом через Казахстан":
         await Calculator.eurobacs.set()
         await message.answer("Хорошо. Выберите теперь валюту для расчёта:", reply_markup=nv.SuperMenu.EuroBaksMenu)

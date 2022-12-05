@@ -23,19 +23,18 @@ dp = Dispatcher(bot=bot,
 
 
 
-class Deep (StatesGroup):
+class Deep0 (StatesGroup):
     lvl1 = State()
     lvl2 = State()
 
-class Deep1_1(Deep):
+class Deep1_Consult(StatesGroup):
     lvl3 = State()
     lvl4 = State()
     lvl5 = State()
-
-class Deep1_2(Deep):
+    lvl4 = State()
+    lvl5 = State()
     lvl6 = State()
-    lvl7 = State()
-    lvl8 = State()
+
 
 
 
@@ -66,8 +65,9 @@ async def welcome_message(message: types.Message, state: FSMContext):
     This handler will be called when user sends `/start` or `/help` command
     """
     await Deep1_Consult.next()
-    current_state  = await state.get_state()
+    current_state = await state.get_state()
     print(current_state)
+    print(type(current_state))
     await bot.send_message(message.from_user.id, f"Вперед  вы на уровне{current_state} ")
 
 
