@@ -1,12 +1,12 @@
 import logging
 import marka as nv
 import random
-from texts import text_1, make_text_hello
+from texts import make_text_hello, make_text_for_FAQ
 
 from exchange import get_exchange as valut
 import aiogram.utils.markdown as md
 from aiogram import executor, Bot, Dispatcher, types
-from config import TOKEN_API, NAME
+from config import NAME
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.types import ParseMode
 from aiogram.dispatcher.filters import Text
@@ -68,9 +68,6 @@ class Calculator1(StatesGroup):
     result = State()
 
 
-idd = 716336613
-
-
 @dp.message_handler(commands=['start'], state="*")
 async def welcome_message(message: types.Message, state: FSMContext):
     """
@@ -85,7 +82,6 @@ async def welcome_message(message: types.Message, state: FSMContext):
 
 @dp.message_handler(commands=['info'], state="*")
 async def info_func(message: types.Message, state: FSMContext):
-    """"""
     value = await state.get_state()
     print(value)
 
@@ -98,22 +94,27 @@ async def back_btn_function(message: types.Message, state: FSMContext):
             await state.finish()
             await message.answer("Вы вернулись назад в меню заказа",
                                  reply_markup=nv.SuperMenu.invoiceMenu)
+
         case "TradeInn:pas":
             await state.finish()
             await message.answer("Вы вернулись назад в меню заказа",
                                  reply_markup=nv.SuperMenu.invoiceMenu)
+
         case "BuyOut:shop":
             await state.finish()
             await message.answer('Вы вернулись назад в меню заказа!',
                                  reply_markup=nv.SuperMenu.invoiceMenu)
+
         case "BuyOut:login":
             await state.finish()
             await message.answer('Вы вернулись назад в меню заказа!',
                                  reply_markup=nv.SuperMenu.invoiceMenu)
+
         case "OrderStates:order_kaz_choice":
             await state.finish()
             await message.answer("Меню выбора заказа",
                                  reply_markup=nv.SuperMenu.invoiceMenu)
+
         case "OrderStates:order_kaz_ch1_shop_name":
             await OrderStates.order_kaz_choice.set()
             await message.answer('Вы вернулись назад! Теперь нам нужно получить либо доступ'
@@ -164,6 +165,7 @@ async def back_btn_function(message: types.Message, state: FSMContext):
         case "Calculator1:getmoney":
             await state.finish()
             await message.answer("Вы вернулись в меню консультаций.", reply_markup=nv.SuperMenu.consMenu)
+
         case None:
             await message.answer('Вы вернулись в главное меню', reply_markup=nv.SuperMenu.menu)
 
@@ -330,7 +332,6 @@ async def href(message: types.Message, state: FSMContext):
     text = 'Заказ номер ' + md.code(random.randint(1000, 9999)) + "\n"
     async with state.proxy() as data:
         num = data.get('num')
-        hrefs_num = ['href_' + str(i) for i in range(1, num + 1)]
         for i in range(1, num + 1):
             key = 'href_' + str(i)
             link = data.get(key)
@@ -373,8 +374,8 @@ async def href(message: types.Message, state: FSMContext):
             if num <= 14:
                 num += 1
                 data['num'] = num
-                href = 'href_' + str(num)
-                data[href] = message.text
+                hrefs = 'href_' + str(num)
+                data[hrefs] = message.text
                 await message.answer(f'Ваша {vaflalist[num - 1]} ссылка сохранена')
                 await message.answer(f'Введите ссылку на следующий товар или завершите заказ:',
                                      reply_markup=nv.SuperMenu.kaz_order)
@@ -399,163 +400,42 @@ async def hello_faq(message: types.Message):
 
 
 @dp.message_handler(state=FAQ.start)
-async def generate_content_faq(message: types.Message):
+async def generate_faq(message: types.Message):
     if message.text == "Покупка транзитом через Казахстан":
-        await message.answer(md.text(
-            md.text("*1й Вариант. Покупка транзитом через Казахстан.*"),
-            md.text(" "),
-            md.text("В Казахстан шлют все основные велосипедные магазины: bike-discount.de, "
-                    "bike-components.de, chainreactioncycles.com, wiggle.com. Эта схема без"
-                    " европейского НДС. "),
-            md.text("r2-bike.com b bike24.com не шлют в Казахстан, для них подходит 3тий вариант."),
-            md.text("По зимнему снаряжению доставка в Казахстан есть в snowinn.com, skicenter.it, snowcountry.eu."),
-            md.text(" "),
-            md.text("Перед заказом убедитесь , что магазин шлёт в Казахстан вообще и ваши товары в частности, для "
-                    "этого достаточно сменить страну доставки на Казахстан."),
-            md.text(" "),
-            md.text(md.bold("Заказ от 500 евро"),
-                    ", групповые заказы мы не собираем, но вы можете самостоятельно кооперироваться."
-                    " Доставка в Россию с Казахстана Сдеком 1-3 тыс.руб со страховкой, если "
-                    "негабарит типа колес или лыж то 3-5 тыс.руб, велосипед в сборе около 7 тыс.руб. "
-                    "Если посылка идет экспресс доставками, то есть дополнительный сбор для таможенного "
-                    "оформления 3500 теньге (500 рублей). Таможенный лимит для беспошлинного ввоза сейчас "
-                    "1000 евро."),
-            md.text(" "),
-            md.text("*Сумма к оплате Покупателем=*"),
-            md.text(
-                "*(сумма заказа в валюте вместе с доставкой в казахстан) х (курc) х (1.25) + (доставка в россию и таможенная пошлина, если заказ больше 1000 евро)*"),
-            md.text(" "),
-            md.text(f"Курс сегодня: {eur} евро, {usd}, доллар"),
-            md.text(" "),
-            md.text(
-                "Наполняете корзину товарами и даете доступ, мы копируем в свой акаунт. Если корзина небольшая можно просто"
-                " выслать ссылки. Далее вносите предоплату на карту. После отправки заказа магазином, мы высылаем вам трек для"
-                " отслеживания."),
-            sep='\n'),
-            reply_markup=nv.SuperMenu.faqMenu,
-            parse_mode=ParseMode.MARKDOWN)
+        await message.answer(make_text_for_FAQ(eur, usd, 'var_1_1'),
+                             reply_markup=nv.SuperMenu.faqMenu,
+                             parse_mode=ParseMode.MARKDOWN)
         await message.answer(md.code(" Тут будет инлайн кнопка сделать заказ"), parse_mode=ParseMode.MARKDOWN)
-        await message.answer(md.text(
-            md.text("Забирать в моём сервисе по адресу Москва; ул.Полтавская 35 или вышлю напрямую на ваш адрес."),
-            md.text(
-                "В этой схеме мы оплачиваем товар, оформляем все необходимые документы для таможни и организуем его "
-                "отправку в Россию при получении. "
-                "Отправка из Казахстана страхуется на полную сумму, срок отправки с момента получения 5 дней."),
-            md.text(" "),
-            md.text(
-                "Риски для покупателя здесь в основном связаны с казахской таможней, но у нас есть договор с проверенным таможенным брокером и риски минимизированны."),
-            md.text(" "),
-            md.text(("*Доставка СДЕК. Важно!*"),
-                    "Если у вас есть малейшие сомнения в целостности послки или она помята, вскрывать нужно в пункте СДЭК."
-                    "Посылка застрахованна на полную сумму. В накладной СДЭК указан ", md.italic("объемный "),
-                    "вес, обычно он "
-                    "заметно больше физического веса."),
-            sep="\n"
-        ),
-            reply_markup=nv.SuperMenu.faqMenu,
-            parse_mode=ParseMode.MARKDOWN
-        )
+        await message.answer(make_text_for_FAQ(eur, usd, 'var_1_2'),
+                             reply_markup=nv.SuperMenu.faqMenu,
+                             parse_mode=ParseMode.MARKDOWN
+                             )
     elif message.text == "Покупка на Tradeinn":
-        await message.answer(text_1,
+        await message.answer(make_text_for_FAQ(eur, usd, 'var_2_1'),
                              parse_mode=ParseMode.MARKDOWN
                              )
         await message.answer(md.code("Тут будет инлайн кнопа сделать заказ"), parse_mode=ParseMode.MARKDOWN)
-        await message.answer(md.text(
-            md.text("*Сроки доставки *", "3-5 недель. ",
-                    md.link("Отслеживать здесь", "https://mailingtechnology.com/tracking/")),
-            md.text(" "),
-            md.text("*Список товаров запрещённых к ввозу в Россию*"),
-            md.text("Взято на сайте бандерольки"),
-            md.text("В связи с введёнными санкциями ЕС в данный момент из Европы в Россию нельзя переслать следующее:"),
-            md.text(
-                "Товары стоимостью выше 300 евро, если это косметика, одежда, обувь, аксессуары, спортивные товары, "
-                "ювелирные изделия и другие повседневные товары;"),
-            md.text("Бытовая техника свыше 750 евро за единиу товара;"),
-            md.text("Фото и видеокамеры, а также фотовспышки соимостью выше 1000 евро"),
-            md.text("Музыкальные инструменты стоимостью выше 1500 евро."),
-            md.text(" "),
-            md.link("Список бандерольки", "https://qwintry.com/ru/forbidden-goods"),
-            md.text(" "),
-            md.link("Официальный список", "https://www.alta.ru/tnved/forbidden_codes"),
-            sep="\n"),
+        await message.answer(
+            make_text_for_FAQ(eur, usd, 'var_2_2'),
             parse_mode=ParseMode.MARKDOWN,
             reply_markup=nv.SuperMenu.faqMenu
         )
     elif message.text == "Покупка через почтовых посредников":
-        await message.answer(md.text(
-            md.text("*3 вариант. Выкуп товара. Поставка через почтового посредника.*"),
-            md.text("По этой схеме можно купить во всех стандартных интернет магазинах."
-                    " Заказ от 200 евро"),
-            md.text("Вы заказываете через посредника типа",
-                    md.link("бандерольки", "https://qwintry.com/ru/kz"),
-                    ",",
-                    md.link("shipito", "https://www.shipito.com"),
-                    ",",
-                    md.link("alfaparcel", "https://alfaparcel.com/"),
-                    "и прочие, если нет аккаунта то регистрируетесь. В интернет-магазине в качестве почтового "
-                    "адреса ставите местный адрес, который выдает посредник.",
-                    sep=" "),
-            md.text("Кроме того есть велосипедные магазины ",
-                    md.link("starbike", "https://www.starbike.ru/"),
-                    ",",
-                    md.link("bikehit", "https://www.bikehit.de/de/"),
-                    "поставляющие напрямую в Россию, правда товары до 300 евро только, в них выкупаю по тем же"
-                    " расценкам.",
-                    sep=" "),
-            md.text(" "),
-            md.text("Если вы покупаете в европе то минус этой схемы в том, что вы платите европейский ват(ндс),"
-                    "при покупке в штатах ндс нет."),
-            md.text(" "),
-            md.text("В этой схеме мы только оплачиваем товар и взаимодействуем с вами на этапе покупки в "
-                    "выбраном интернет-магазине, все остальные операции осуществляет бандеролька или другой"
-                    " почтовый посредник. Схема рабочая и сейчас самая распространенная схема покупки в Россию. "
-                    "Скорость прохождения заказов разная, неделю где-то посылка ждёт переупаковки и бывают "
-                    "затыки на европейской таможне. В среднем с европы за месяц приходит, со штатов приблизительно "
-                    "также. Стоимость доставки через бандерольку немного выше, чем у магазинов и стандартных "
-                    "почтовых служб. Например доставка 5кг посылки со штатов стоит около 100 долларов."),
-            md.text(" "),
-            md.text("Перед заказом убедитесь , что вы не покупаете товары попадающие под санкции (см. ниже "
-                    "или на сайте бандерольки), если есть малейшие сомнения то спрашивайте саппорт почтового "
-                    "посредника."),
-            md.text(" "),
-            md.text("*Сумма к оплате Покупателем = (сумма заказа общая с доставкой до местного адреса в валюте) х "
-                    "1.2 х (биржевой курс) *"),
-            md.text(" "),
-            md.text(f"Курс сегодня: {eur} евро, {usd}, доллар"),
-            md.text(" "),
-            md.text("Да конечно вы можете всё сделать самостоятельно через бандерольку без нас. Но выкуп товара "
-                    "у нас дешевле. Кроме того многие вопросы связанные с заказми (замена товара, возвраты и т.д.) "
-                    "мы решаем более оперативно."),
-            sep="\n"),
-            parse_mode=ParseMode.MARKDOWN,
-            reply_markup=nv.SuperMenu.faqMenu,
-
-        )
+        await message.answer(make_text_for_FAQ(eur, usd, 'var_3_1'),
+                             parse_mode=ParseMode.MARKDOWN,
+                             reply_markup=nv.SuperMenu.faqMenu,
+                             )
         await message.answer(md.code("Тут будет инлайн кнопка сделать заказ")),
-        await message.answer(md.text(
-            md.text("*Список товаров запрещённых к ввозу в Россию*"),
-            md.text("Взято на сайте бандерольки"),
-            md.text("В связи с введёнными санкциями ЕС в данный момент из Европы в Россию нельзя переслать следующее:"),
-            md.text(
-                "Товары стоимостью выше 300 евро, если это косметика, одежда, обувь, аксессуары, спортивные товары, "
-                "ювелирные изделия и другие повседневные товары;"),
-            md.text("Бытовая техника свыше 750 евро за единиу товара;"),
-            md.text("Фото и видеокамеры, а также фотовспышки соимостью выше 1000 евро"),
-            md.text("Музыкальные инструменты стоимостью выше 1500 евро."),
-            md.text(" "),
-            md.link("Список бандерольки", "https://qwintry.com/ru/forbidden-goods"),
-            md.text(" "),
-            md.link("Официальный список", "https://www.alta.ru/tnved/forbidden_codes"),
-            sep="\n"),
-            parse_mode=ParseMode.MARKDOWN,
-            reply_markup=nv.SuperMenu.faqMenu)
+        await message.answer(make_text_for_FAQ(eur, usd, 'var_3_2'),
+                             parse_mode=ParseMode.MARKDOWN,
+                             reply_markup=nv.SuperMenu.faqMenu)
     else:
         await message.reply("Я такой команды не знаю! Используйте меню для выбора ответа.",
                             reply_markup=nv.SuperMenu.faqMenu)
 
 
 @dp.message_handler(state=Calculator.eurobacs)
-async def dollareurocalc(message: types.Message, state: FSMContext):
+async def calculator_1(message: types.Message, state: FSMContext):
     if message.text in ("Евро", "Доллар"):
         await message.answer(f"Валюта: {message.text}, Теперь введите полную сумму корзины вместе"
                              f" с доставкой в Казахстан:",
@@ -686,7 +566,7 @@ async def getmoney2(message: types.Message, state: FSMContext):
 
 
 @dp.message_handler()
-async def masmes(message: types.Message):
+async def handler_for_zero_State(message: types.Message):
     if message.text == 'Сделать заказ':
         await message.answer('Отлично!, теперь выбирайте способ заказа.'
                              'Если возникнут трудности всегда можно обратится в раздел Консультации',

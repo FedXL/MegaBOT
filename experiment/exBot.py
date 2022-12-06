@@ -1,7 +1,7 @@
 import logging
 import marka as nv
 import random
-from texts import text_1
+from texts import text_var_2_1
 
 from exchange import get_exchange as valut
 import aiogram.utils.markdown as md
