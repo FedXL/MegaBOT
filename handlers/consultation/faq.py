@@ -1,11 +1,4 @@
-
-
-
-
-
-
-
-
+from bot2 import usd, eur
 
 
 @dp.message_handler(Text(equals='FAQ'), state=None)

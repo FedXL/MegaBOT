@@ -1,5 +1,4 @@
 
-
 def ShopValid(text: str)-> bool:
     try:
         new_text = int(text)

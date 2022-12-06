@@ -1,3 +1,10 @@
+
+
+
+
+
+
+
 elif message.text == 'Koнсультация':
     await message.answer('Koнсультация', reply_markup=nv.SuperMenu.consMenu)
 
