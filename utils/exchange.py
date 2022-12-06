@@ -10,7 +10,17 @@ def get_exchange():
     usd = data['Valute']['USD']['Value']
     eur = data['Valute']['EUR']['Value']
     print(f'usd {usd},eur {eur}')
-    return usd,eur
+    print(data)
+    print(data['Timestamp'].split('T'))
+    return usd, eur
+
+
+from datetime import datetime
+newdate = datetime.now()
+time = newdate.time()
+newdate = newdate.strftime("%Y-%m-%d")
+print(newdate,time)
+
 
 if __name__ =='__main__':
     get_exchange()
