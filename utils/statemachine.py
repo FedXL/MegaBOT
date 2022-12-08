@@ -26,13 +26,13 @@ class FAQ(StatesGroup):
     start = State()
 
 
-class Calculator(StatesGroup):
+class Calculator_1(StatesGroup):
     eurobacs = State()
     getmoney = State()
     result = State()
 
 
-class Calculator1(StatesGroup):
+class Calculator_2(StatesGroup):
     eurobacs = State()
     getmoney = State()
     result = State()

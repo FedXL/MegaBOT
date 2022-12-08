@@ -1,7 +1,15 @@
-from bot2 import usd, eur
+from aiogram import types, Dispatcher
+from aiogram.dispatcher.filters import Text
+from aiogram.types import ParseMode
+from create_bot import usd, eur
+import aiogram.utils.markdown as md
+from create_bot import dp
+from utils.statemachine import FAQ
+from utils.texts import make_text_for_FAQ
+import utils.markap_menu as nv
 
 
-@dp.message_handler(Text(equals='FAQ'), state=None)
+# @dp.message_handler(Text(equals='FAQ'), state=None)
 async def hello_faq(message: types.Message):
     await message.answer(md.text(
         md.text("Добро пожаловать в наш ", md.bold('FAQ'), "!"),
@@ -13,7 +21,7 @@ async def hello_faq(message: types.Message):
     await FAQ.start.set()
 
 
-@dp.message_handler(state=FAQ.start)
+# @dp.message_handler(state=FAQ.start)
 async def generate_faq(message: types.Message):
     if message.text == "Покупка транзитом через Казахстан":
         await message.answer(make_text_for_FAQ(eur, usd, 'var_1_1'),
@@ -46,3 +54,8 @@ async def generate_faq(message: types.Message):
     else:
         await message.reply("Я такой команды не знаю! Используйте меню для выбора ответа.",
                             reply_markup=nv.SuperMenu.faqMenu)
+
+
+def register_handlers_faq(dp: Dispatcher):
+    dp.register_message_handler(hello_faq, Text(equals='FAQ'), state=None)
+    dp.register_message_handler(generate_faq, state=FAQ.start)

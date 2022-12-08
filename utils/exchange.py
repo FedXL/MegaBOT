@@ -1,6 +1,7 @@
-from pprint import pprint
-
+from collections import namedtuple
 import requests
+
+rate = namedtuple("Rate","eur usd date")
 
 def get_exchange():
     try:
@@ -10,16 +11,15 @@ def get_exchange():
     usd = data['Valute']['USD']['Value']
     eur = data['Valute']['EUR']['Value']
     print(f'usd {usd},eur {eur}')
-    print(data)
-    print(data['Timestamp'].split('T'))
-    return usd, eur
+    date =(data['Timestamp'].split('T'))
+    return rate(eur=eur, usd=usd, date=date)
 
 
-from datetime import datetime
-newdate = datetime.now()
-time = newdate.time()
-newdate = newdate.strftime("%Y-%m-%d")
-print(newdate,time)
+# from datetime import datetime
+# newdate = datetime.now()
+# time = newdate.time()
+# newdate = newdate.strftime("%Y-%m-%d")
+# print(newdate,time)
 
 
 if __name__ =='__main__':

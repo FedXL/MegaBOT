@@ -70,22 +70,22 @@ async def back_btn_function(message: types.Message, state: FSMContext):
             await message.answer('Вы вернулись назад в меню консультаций!',
                                  reply_markup=nv.SuperMenu.consMenu)
 
-        case "Calculator:eurobacs":
+        case "Calculator_1:eurobacs":
             await state.finish()
             await message.answer("Вы вернулись в меню консультаций.",
                                  reply_markup=nv.SuperMenu.consMenu)
 
-        case "Calculator:getmoney":
+        case "Calculator_1:getmoney":
             await state.finish()
             await message.answer("Вы вернулись в меню консультаций.",
                                  reply_markup=nv.SuperMenu.consMenu)
 
-        case "Calculator1:eurobacs":
+        case "Calculator_2:eurobacs":
             await state.finish()
             await message.answer("Вы вернулись в меню консультаций.",
                                  reply_markup=nv.SuperMenu.consMenu)
 
-        case "Calculator1:getmoney":
+        case "Calculator_2:getmoney":
             await state.finish()
             await message.answer("Вы вернулись в меню консультаций.",
                                  reply_markup=nv.SuperMenu.consMenu)

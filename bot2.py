@@ -1,16 +1,16 @@
-import logging
-from utils import markap_menu as nv
-import random
-from utils.texts import make_text_hello, make_text_for_FAQ
-from utils.exchange import get_exchange as valut
-import aiogram.utils.markdown as md
-from aiogram import executor, Bot, Dispatcher, types
-from utils.config import NAME
-from aiogram.contrib.fsm_storage.memory import MemoryStorage
-from aiogram.types import ParseMode
-from aiogram.dispatcher.filters import Text
-from aiogram.dispatcher import FSMContext
-from utils import ShopValid
+# import logging
+# from utils import markap_menu as nv
+# import random
+# from utils.texts import make_text_hello, make_text_for_FAQ
+# from utils.exchange import get_exchange as valut
+# import aiogram.utils.markdown as md
+# from aiogram import executor, Bot, Dispatcher, types
+# from utils.config import NAME
+# from aiogram.contrib.fsm_storage.memory import MemoryStorage
+# from aiogram.types import ParseMode
+# from aiogram.dispatcher.filters import Text
+# from aiogram.dispatcher import FSMContext
+# from utils import ShopValid
 
 name = NAME
 
