@@ -2,12 +2,12 @@ from aiogram import Bot
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 import logging
 from aiogram.dispatcher import Dispatcher
-from utils.config import TOKEN_BOT
+from utils.config import API_TOKEN
 from utils.exchange import get_exchange
 
 logging.basicConfig(level=logging.INFO)
 storage = MemoryStorage()
-bot = Bot(TOKEN_BOT)
+bot = Bot(API_TOKEN)
 dp = Dispatcher(bot=bot,
                 storage=storage)
 

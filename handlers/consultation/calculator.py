@@ -3,8 +3,7 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
 from aiogram.types import ParseMode
 
-from utils.markap_menu import SuperMenu as nv
-from create_bot import dp
+import utils.markap_menu as nv
 from utils.statemachine import Calculator_1, Calculator_2
 from create_bot import usd,eur
 import aiogram.utils.markdown as md
@@ -23,7 +22,6 @@ async def zero_calculator_handler(message: types.Message):
 
 
 
-# @dp.message_handler(state=Calculator_1.eurobacs)
 async def calculator_1(message: types.Message, state: FSMContext):
     if message.text in ("Евро", "Доллар"):
         await message.answer(f"Валюта: {message.text}, Теперь введите полную сумму корзины вместе"
@@ -36,7 +34,6 @@ async def calculator_1(message: types.Message, state: FSMContext):
         await message.reply("Непонятная команда, пожалуйста воспользуйтесь кнопками меню.")
 
 
-# @dp.message_handler(state=Calculator_1.getmoney)
 async def getmoney1(message: types.Message, state: FSMContext):
     if message.text.isdigit():
         async with state.proxy() as data:
@@ -52,8 +49,8 @@ async def getmoney1(message: types.Message, state: FSMContext):
             return
     else:
         await message.answer(
-            f"Ничего не понимаю. Предыдущее сообщение *{message.text}* не похоже на число. Число должно состоять"
-            f"только из цифр, Попробуйте ещё раз.")
+            f"Предыдущее сообщение *{message.text}* не похоже на число. Число должно состоять"
+            f" только из цифр, Попробуйте ещё раз.")
         return
     if int(message.text) > 1000:
         total1 = int(message.text) * 1.25 * valuta + 1000 + \
@@ -82,7 +79,7 @@ async def getmoney1(message: types.Message, state: FSMContext):
     await message.answer(md.text(
         md.text(text1),
         md.text(" "),
-        md.text(f"*от {int(total1)} руб.*", f"*до {int(total2)} руб.*", sep=" "),
+        md.text(f"*от {total1} руб.*", f"*до {total2} руб.*", sep=" "),
         md.text(" "),
         md.text("В зависимости от габаритов и веса,"
                 " влияет на стоимость доставки в Россию."),
@@ -94,7 +91,7 @@ async def getmoney1(message: types.Message, state: FSMContext):
         reply_markup=nv.SuperMenu.cancel)
 
 
-# @dp.message_handler(state=Calculator_2.eurobacs)
+
 async def calculator_2(message: types.Message, state: FSMContext):
     if message.text in ("Евро", "Доллар"):
         await message.answer(f"Валюта: {message.text}, Теперь введите полную сумму корзины вместе"
@@ -154,12 +151,10 @@ async def getmoney2(message: types.Message, state: FSMContext):
         reply_markup=nv.SuperMenu.cancel)
 
 def register_handlers_calculator(dp: Dispatcher):
-    # dp.register_message_handler(zero_calculator_handler,
-    #                             Text(equals="Назад"), state="*")
     dp.register_message_handler(zero_calculator_handler,
-                                                        Text(equals=["Посчитать примерную стоимость заказа транзитом через Казахстан",
-                                                              "Посчитать примерную стоимость по выкупу заказа"]),
-                                                        state="*")
+                                Text(equals=["Посчитать примерную стоимость заказа транзитом через Казахстан",
+                                             "Посчитать примерную стоимость по выкупу заказа"]),
+                                state="*")
     dp.register_message_handler(getmoney1, state=Calculator_1.getmoney),
     dp.register_message_handler(getmoney2, state=Calculator_2.getmoney),
     dp.register_message_handler(calculator_1, state=Calculator_1.eurobacs),

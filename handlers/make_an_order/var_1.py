@@ -1,6 +1,19 @@
+import random
+from aiogram import types, Dispatcher
+from aiogram.dispatcher import FSMContext
+from aiogram.dispatcher.filters import Text
+from aiogram.types import ParseMode
+import utils.markap_menu as nv
+from utils.statemachine import OrderStates
+from create_bot import bot
+import aiogram.utils.markdown as md
 
-@dp.message_handler(Text(equals='Заказ через Казахстан'), state=None)
-async def order_kaz(message: types.Message):
+from utils.utils_lite import ShopValid
+
+"""______________________Сделать заказ через Казахстан_________________________________"""
+
+
+async def order_kaz_start_handler(message: types.Message):
     await OrderStates.order_kaz_choice.set()
     await message.answer('Отлично! Теперь нам нужно получить либо доступ'
                          ' к корзине в магазине, '
@@ -8,8 +21,8 @@ async def order_kaz(message: types.Message):
                          reply_markup=nv.SuperMenu.kaz_choice_menu)
 
 
-@dp.message_handler(state=OrderStates.order_kaz_choice)
-async def order_kaz_choice(message: types.Message, state: FSMContext):
+
+async def make_order_kaz_choice(message: types.Message, state: FSMContext):
     if message.text == "Предоставлю доступ в личный кабинет":
         async with state.proxy() as data:
             data['kaz_choice'] = 'href'
@@ -30,7 +43,6 @@ async def order_kaz_choice(message: types.Message, state: FSMContext):
         await message.reply('Непонятная команда, используйте кнопки меню для ответа')
 
 
-@dp.message_handler(state=OrderStates.order_kaz_ch1_shop_name)
 async def get_shop_name(message: types.Message, state):
     valid = ShopValid(message.text)
     if not valid:
@@ -43,8 +55,8 @@ async def get_shop_name(message: types.Message, state):
         await OrderStates.order_kaz_ch1_loggin.set()
 
 
-@dp.message_handler(state=OrderStates.order_kaz_ch1_loggin)
-async def get_shop_name(message: types.Message, state):
+
+async def get_login(message: types.Message, state):
     if len(message.text) > 25:
         await message.reply(f"Что-то пошло не так, логин длинный какой то \n"
                             f"на спам похоже. Попробуйте ещё")
@@ -56,8 +68,8 @@ async def get_shop_name(message: types.Message, state):
         await OrderStates.order_kaz_ch1_password.set()
 
 
-@dp.message_handler(state=OrderStates.order_kaz_ch1_password)
-async def get_shop_name(message: types.Message, state):
+
+async def get_password(message: types.Message, state):
     if len(message.text) > 35:
         await message.reply(f" Что-то пошло не так, пароль длинный какойто \n"
                             f" на спам похоже. Попробуйте ещё")
@@ -81,9 +93,8 @@ async def get_shop_name(message: types.Message, state):
                          reply_markup=nv.SuperMenu.cancel)
 
 
-@dp.message_handler(Text(equals='Завершить заказ'),
-                    state=OrderStates.ordder_kaz_ch2_href)
-async def href(message: types.Message, state: FSMContext):
+
+async def end_hrefs(message: types.Message, state: FSMContext):
     text = 'Заказ номер ' + md.code(random.randint(1000, 9999)) + "\n"
     async with state.proxy() as data:
         num = data.get('num')
@@ -97,8 +108,7 @@ async def href(message: types.Message, state: FSMContext):
         await state.finish()
 
 
-@dp.message_handler(state=OrderStates.ordder_kaz_ch2_href)
-async def href(message: types.Message, state: FSMContext):
+async def get_href(message: types.Message, state: FSMContext):
     vaflalist = (
         'первая',
         'вторая',
@@ -140,3 +150,13 @@ async def href(message: types.Message, state: FSMContext):
                                      f'Лучше передайте контроль над личным кабинетом '
                                      f'Или оформите ещё один заказ.',
                                      reply_markup=nv.SuperMenu.kaz_order)
+
+
+def register_handlers_var_1(dp: Dispatcher):
+    dp.register_message_handler(order_kaz_start_handler, Text(equals="Заказ через Казахстан"), state=None)
+    dp.register_message_handler(make_order_kaz_choice, state=OrderStates.order_kaz_choice)
+    dp.register_message_handler(get_shop_name, state=OrderStates.order_kaz_ch1_shop_name)
+    dp.register_message_handler(get_login, state=OrderStates.order_kaz_ch1_loggin)
+    dp.register_message_handler(get_password, state=OrderStates.order_kaz_ch1_password)
+    dp.register_message_handler(end_hrefs, Text(equals='Завершить заказ'), state=OrderStates.ordder_kaz_ch2_href)
+    dp.register_message_handler(get_href, state=OrderStates.ordder_kaz_ch2_href)

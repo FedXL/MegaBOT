@@ -1,7 +1,7 @@
 from aiogram import types, Dispatcher
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
-from utils.markap_menu import SuperMenu as nv
+import utils.markap_menu as nv
 from create_bot import dp
 from utils.statemachine import OrderStates
 

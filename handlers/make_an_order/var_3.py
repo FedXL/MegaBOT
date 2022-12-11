@@ -1,13 +1,25 @@
-@dp.message_handler(Text(equals='Выкуп заказа'), state=None)
-async def buyout(message: types.Message):
+import random
+from aiogram import types, Dispatcher
+from aiogram.dispatcher import FSMContext
+from aiogram.dispatcher.filters import Text
+from aiogram.types import ParseMode
+import utils.markap_menu as nv
+from create_bot import dp
+import aiogram.utils.markdown as md
+
+from utils.statemachine import BuyOut
+
+
+# @dp.message_handler(Text(equals='Выкуп заказа'), state=None)
+async def start_buyout(message: types.Message):
     await message.answer("Замечательно! В таком случае нам понадобятся: "
                          "Название сайта , пароль и логин от личного кабинета.")
     await message.answer('Введите сайт магазина:', reply_markup=nv.SuperMenu.cancel)
     await BuyOut.shop.set()
 
 
-@dp.message_handler(state=BuyOut.shop)
-async def buyout_get_shop(message: types.Message, state: FSMContext):
+# @dp.message_handler(state=BuyOut.shop)
+async def get_buyout_shop(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['shop'] = message.text
     await message.answer('Сайт успешно сохранён.')
@@ -15,8 +27,8 @@ async def buyout_get_shop(message: types.Message, state: FSMContext):
     await BuyOut.login.set()
 
 
-@dp.message_handler(state=BuyOut.login)
-async def buyout_get_login(message: types.Message, state: FSMContext):
+# @dp.message_handler(state=BuyOut.login)
+async def get_buyout_login(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['login'] = message.text
     await message.answer('Логин успешно сохранён!')
@@ -24,8 +36,8 @@ async def buyout_get_login(message: types.Message, state: FSMContext):
     await BuyOut.pas.set()
 
 
-@dp.message_handler(state=BuyOut.pas)
-async def buyout_get_login(message: types.Message, state: FSMContext):
+# @dp.message_handler(state=BuyOut.pas)
+async def get_buyout_pass(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['pass'] = message.text
     await message.answer('Ваш заказ отправлен! Скоро с вами свяжется оператор.')
@@ -39,3 +51,9 @@ async def buyout_get_login(message: types.Message, state: FSMContext):
         reply_markup=nv.SuperMenu.cancel,
         parse_mode=ParseMode.MARKDOWN)
     await state.finish()
+
+def register_handlers_var_3(dp: Dispatcher):
+    dp.register_message_handler(start_buyout, Text(equals='Выкуп заказа'), state=None)
+    dp.register_message_handler(get_buyout_shop, state=BuyOut.shop)
+    dp.register_message_handler(get_buyout_login,state=BuyOut.login)
+    dp.register_message_handler(get_buyout_pass,state=BuyOut.pas)

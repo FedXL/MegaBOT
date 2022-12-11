@@ -1,8 +1,8 @@
-from aiogram.types import ReplyKeyboardMarkup,KeyboardButton
-
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardButton, InlineKeyboardMarkup
 
 
 class SuperMenu(KeyboardButton,ReplyKeyboardMarkup):
+
     __btnMain = KeyboardButton('Назад')
 
     __btn1 = KeyboardButton('Сделать заказ')
@@ -26,7 +26,6 @@ class SuperMenu(KeyboardButton,ReplyKeyboardMarkup):
                                                             add(__btnBuyTranzit).\
                                                             add(__btnBuyInvoice).\
                                                             add(__btnMain)
-
     __btnFaqKazah = KeyboardButton('Покупка транзитом через Казахстан')
     __btnFaqTranzit = KeyboardButton('Покупка на Tradeinn')
     __btnFaqPosrednik = KeyboardButton('Покупка через почтовых посредников')
@@ -49,4 +48,6 @@ class SuperMenu(KeyboardButton,ReplyKeyboardMarkup):
 
     __btnEuro = KeyboardButton("Евро")
     __btnUsd = KeyboardButton("Доллар")
-    EuroBaksMenu = ReplyKeyboardMarkup(resize_keyboard=True).add(__btnEuro,__btnUsd).add(__btnMain)
+    EuroBaksMenu = ReplyKeyboardMarkup(resize_keyboard=True).add(__btnEuro, __btnUsd).add( __btnMain)
+
+
