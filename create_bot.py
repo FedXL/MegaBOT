@@ -5,7 +5,7 @@ from aiogram.dispatcher import Dispatcher
 from utils.config import API_TOKEN
 from utils.exchange import get_exchange
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 storage = MemoryStorage()
 bot = Bot(API_TOKEN)
 dp = Dispatcher(bot=bot,

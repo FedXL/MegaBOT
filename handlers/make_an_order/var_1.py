@@ -2,12 +2,11 @@ import random
 from aiogram import types, Dispatcher
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
-from aiogram.types import ParseMode
+from aiogram.types import ParseMode, InlineKeyboardMarkup, InlineKeyboardButton
 import utils.markap_menu as nv
 from utils.statemachine import OrderStates
 from create_bot import bot
 import aiogram.utils.markdown as md
-
 from utils.utils_lite import ShopValid
 
 """______________________Сделать заказ через Казахстан_________________________________"""
@@ -19,7 +18,6 @@ async def order_kaz_start_handler(message: types.Message):
                          ' к корзине в магазине, '
                          'либо прямые ссылки на товары. Выбор за вами:',
                          reply_markup=nv.SuperMenu.kaz_choice_menu)
-
 
 
 async def make_order_kaz_choice(message: types.Message, state: FSMContext):

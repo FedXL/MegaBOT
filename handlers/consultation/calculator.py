@@ -9,9 +9,6 @@ from create_bot import usd,eur
 import aiogram.utils.markdown as md
 
 
-
-
-
 async def zero_calculator_handler(message: types.Message):
     if message.text == "Посчитать примерную стоимость заказа транзитом через Казахстан":
         await Calculator_1.eurobacs.set()
@@ -19,7 +16,6 @@ async def zero_calculator_handler(message: types.Message):
     elif message.text == "Посчитать примерную стоимость по выкупу заказа":
         await Calculator_2.eurobacs.set()
         await message.answer("Хорошо. Выберите теперь валюту для расчёта:", reply_markup=nv.SuperMenu.EuroBaksMenu)
-
 
 
 async def calculator_1(message: types.Message, state: FSMContext):

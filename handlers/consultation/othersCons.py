@@ -13,5 +13,5 @@ async def call_consultant (message: types.Message):
 
 
 def register_handlers_othersCons(dp: Dispatcher):
-    dp.register_message_handler(call_consultant, Text(equals="Вызов Консультанта"),state="*"),
+    dp.register_message_handler(call_consultant, Text(equals="Вызов Консультанта"), state="*"),
     dp.register_message_handler(make_first_choise_consult, Text(equals="Koнсультация"), state=None)

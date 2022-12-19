@@ -1,7 +1,7 @@
 from aiogram import types
 from aiogram.contrib.middlewares import logging
 from aiogram.dispatcher import FSMContext
-from aiogram.types import ParseMode
+from aiogram.types import ParseMode, CallbackQuery
 from aiogram.utils import executor
 from create_bot import dp, bot
 from handlers.make_an_order import var_1, othersOrder, var_2, var_3
@@ -9,7 +9,6 @@ from utils import markap_menu as nv
 from handlers.back_btn import btn
 from handlers.consultation import calculator,othersCons,faq
 from utils.texts import make_text_hello
-
 
 
 async def on_startup(_):
@@ -28,19 +27,12 @@ async def welcome_message(message: types.Message, state: FSMContext):
                            parse_mode=ParseMode.MARKDOWN)
 
 
-
-
-
-
 @dp.message_handler(commands=['info'], state="*")
 async def info_func(message: types.Message, state: FSMContext):
     value = await state.get_state()
-    print(value)
+    print("state == ",value)
 
 
-# @dp.callback_query_handlers()
-# async def xxxx (callback: types.CallbackQuery):
-#     await callback.answer(text="БЛЯЯЯ")
 
 
 if __name__ == "__main__":
