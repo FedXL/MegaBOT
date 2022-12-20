@@ -89,6 +89,10 @@ async def back_btn_function(message: types.Message, state: FSMContext):
             await state.finish()
             await message.answer("Вы вернулись в меню консультаций.",
                                  reply_markup=nv.SuperMenu.consMenu)
+        case "BuyOut:pas":
+            await state.finish()
+            await message.answer("Меню выбора заказа",
+                                 reply_markup=nv.SuperMenu.invoiceMenu)
 
         case None:
             await message.answer('Вы вернулись в главное меню',
