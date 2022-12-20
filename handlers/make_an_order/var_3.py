@@ -1,4 +1,3 @@
-import random
 from aiogram import types, Dispatcher
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
@@ -6,7 +5,6 @@ from aiogram.types import ParseMode
 import utils.markap_menu as nv
 import aiogram.utils.markdown as md
 from utils.statemachine import BuyOut
-
 
 """-------------------------------------ВЫКУП ЗАКАЗА-------------------------------------------------------"""
 
@@ -37,7 +35,7 @@ async def get_buyout_login(message: types.Message, state: FSMContext):
 async def get_buyout_pass(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['pass'] = message.text
-    await message.answer('Если всё правильно, подтвердите заказ.',reply_markup=nv.SuperMenu.cancel)
+    await message.answer('Если всё правильно, подтвердите заказ.', reply_markup=nv.SuperMenu.cancel)
     mini_menu = types.InlineKeyboardMarkup(row_width=1)
     btn = types.InlineKeyboardButton("Подтвердить заказ", callback_data="TRADE_INN")
     mini_menu.add(btn)
@@ -52,9 +50,8 @@ async def get_buyout_pass(message: types.Message, state: FSMContext):
         parse_mode=ParseMode.MARKDOWN)
 
 
-
 def register_handlers_var_3(dp: Dispatcher):
     dp.register_message_handler(start_buyout, Text(equals='Выкуп заказа'), state=None)
     dp.register_message_handler(get_buyout_shop, state=BuyOut.shop)
-    dp.register_message_handler(get_buyout_login,state=BuyOut.login)
-    dp.register_message_handler(get_buyout_pass,state=BuyOut.pas)
+    dp.register_message_handler(get_buyout_login, state=BuyOut.login)
+    dp.register_message_handler(get_buyout_pass, state=BuyOut.pas)

@@ -1,4 +1,4 @@
-from aiogram import Dispatcher, types
+from aiogram import Dispatcher
 from aiogram.dispatcher import FSMContext
 from aiogram.types import CallbackQuery, ParseMode
 import aiogram.utils.markdown as md
@@ -34,11 +34,14 @@ async def make_order_answer(query: CallbackQuery, state: FSMContext):
                     md.text('Логин: ', md.bold(data.get('login'))),
                     md.text("Пaроль: ", md.bold(data.get('pass')))
                 ]
-
     await state.finish()
-    await bot.send_message(query.from_user.id,
-                           "Завершено! Мы свяжемся с вами для уточнения деталей и оплаты.",
-                           reply_markup=SuperMenu.cancel)
+    await bot.send_message(query.from_user.id,md.text(
+                           "Успешно! Номер вашего заказа *666*",
+                           "Мы свяжемся с вами для уточнения деталей и оплаты.",
+                            md.text(*addition,sep="\n"),
+                            sep="\n"),
+                           reply_markup=SuperMenu.cancel,
+                           parse_mode=ParseMode.MARKDOWN)
     await bot.send_message(message_id,
                            md.text(md.text(user_info),
                                    md.text(*addition, sep="\n"),
