@@ -2,12 +2,15 @@ import random
 from aiogram import types, Dispatcher
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
-from aiogram.types import ParseMode, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
+from aiogram.types import ParseMode
 import utils.markap_menu as nv
 from utils.statemachine import OrderStates
 from create_bot import bot
 import aiogram.utils.markdown as md
+
+from utils.texts import make_links_info_text
 from utils.utils_lite import ShopValid
+
 
 """______________________Сделать заказ через Казахстан_________________________________"""
 
@@ -133,21 +136,21 @@ async def get_href(message: types.Message, state: FSMContext):
 
 
 async def end_hrefs(message: types.Message, state: FSMContext):
-    texts = f"Вариант-1: \n" \
-            f"Заказ через Казахстан: \n"
+    texts = [f"Вариант-1:",
+            f"Заказ через Казахстан."]
     async with state.proxy() as data:
-        num = data.get('num')
-        for i in range(1, num + 1):
-            key = 'href_' + str(i)
-            link = data.get(key)
-            sstring = str(i) + ". " + link + "\n"
-            texts += sstring
+        hrefs = [data.get(key) for key in
+                 [('href_' + str(key)) for key in
+                  [i for i in range(1, data.get('num') + 1)]]]
+        addition = make_links_info_text(hrefs)
+
         await message.answer("Если всё правильно, подтвердите заказ.", reply_markup=nv.SuperMenu.cancel)
         mini_menu = types.InlineKeyboardMarkup(row_width=1)
         btn = types.InlineKeyboardButton("Подтвердить заказ", callback_data="KAZ_ORDER_LINKS")
         mini_menu.add(btn)
-        await message.answer(texts,
-                             reply_markup=mini_menu)
+        await message.answer(md.text(*texts,*addition,sep ="\n"),
+                             reply_markup=mini_menu,
+                             parse_mode=ParseMode.MARKDOWN)
 
 
 def register_handlers_var_1(dp: Dispatcher):

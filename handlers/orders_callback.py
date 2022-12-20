@@ -10,6 +10,8 @@ from utils.texts import make_user_info_report, make_links_info_text
 
 async def make_order_answer(query: CallbackQuery, state: FSMContext):
     await query.answer("Успешно")
+    await query.message.delete_reply_markup()
+    await query.message.delete()
     income = query.data
     user_info = make_user_info_report(query)
     match income:
@@ -30,7 +32,7 @@ async def make_order_answer(query: CallbackQuery, state: FSMContext):
             async with state.proxy() as data:
                 addition = [
                     md.text('Логин: ', md.bold(data.get('login'))),
-                    md.text("Пaроль:", md.bold(data.get('pass')))
+                    md.text("Пaроль: ", md.bold(data.get('pass')))
                 ]
 
     await state.finish()
