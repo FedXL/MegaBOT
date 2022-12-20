@@ -2,7 +2,7 @@ import random
 from aiogram import types, Dispatcher
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
-from aiogram.types import ParseMode, InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import ParseMode, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 import utils.markap_menu as nv
 from utils.statemachine import OrderStates
 from create_bot import bot
@@ -36,7 +36,7 @@ async def make_order_kaz_choice(message: types.Message, state: FSMContext):
                              f" прямые ссылки на каждый из желаемых"
                              f" товаров.\nP.S. ссылка должна быть ПРЯМОЙ, а не из корзины магазина.")
         await message.answer('Введите первую ссылку:', reply_markup=nv.SuperMenu.cancel)
-        await OrderStates.ordder_kaz_ch2_href.set()
+        await OrderStates.order_kaz_ch2_href.set()
     else:
         await message.reply('Непонятная команда, используйте кнопки меню для ответа')
 
@@ -53,7 +53,6 @@ async def get_shop_name(message: types.Message, state):
         await OrderStates.order_kaz_ch1_loggin.set()
 
 
-
 async def get_login(message: types.Message, state):
     if len(message.text) > 25:
         await message.reply(f"Что-то пошло не так, логин длинный какой то \n"
@@ -66,7 +65,6 @@ async def get_login(message: types.Message, state):
         await OrderStates.order_kaz_ch1_password.set()
 
 
-
 async def get_password(message: types.Message, state):
     if len(message.text) > 35:
         await message.reply(f" Что-то пошло не так, пароль длинный какойто \n"
@@ -75,35 +73,20 @@ async def get_password(message: types.Message, state):
         async with state.proxy() as data:
             data['pass'] = message.text
         await message.answer("Пароль успешно сохранён!")
-        await message.answer("Введите пароль для доступа в личный кабинет:", reply_markup=nv.SuperMenu.cancel)
+        mini_menu = types.InlineKeyboardMarkup(row_width=1)
+        btn = types.InlineKeyboardButton("Подтвердить заказ", callback_data="KAZ_ORDER_CABINET")
+        mini_menu.add(btn)
+        await message.answer("Если всё правильно, подтвердите заказ.", reply_markup=nv.SuperMenu.cancel)
         await bot.send_message(message.chat.id,
                                md.text(
-                                   md.text('Номер заказа:', md.code(random.randint(1000, 9999))),
+                                   md.text("Вариант 1",'Заказ через казахстан', sep="\n"),
                                    md.text('Магазин: ', md.bold(data['shop'])),
                                    md.text('Логин:   ', md.bold(data['log'])),
                                    md.text('Пароль:  ', md.bold(data['pass'])),
                                    sep='\n'),
-                               reply_markup=nv.SuperMenu.cancel,
+                               reply_markup=mini_menu,
                                parse_mode=ParseMode.MARKDOWN,
                                )
-    await state.finish()
-    await message.answer('Ваш заказ отправлен! Ожидайте, оператор с вами свяжется в ближайшее время!',
-                         reply_markup=nv.SuperMenu.cancel)
-
-
-
-async def end_hrefs(message: types.Message, state: FSMContext):
-    text = 'Заказ номер ' + md.code(random.randint(1000, 9999)) + "\n"
-    async with state.proxy() as data:
-        num = data.get('num')
-        for i in range(1, num + 1):
-            key = 'href_' + str(i)
-            link = data.get(key)
-            sstring = str(i) + ". " + link + "\n"
-            text += sstring
-        await message.answer('Ваш заказ отправлен! Ожидайте, оператор с вами свяжется в ближайшее время!')
-        await message.answer(text, parse_mode=ParseMode.MARKDOWN, reply_markup=nv.SuperMenu.cancel)
-        await state.finish()
 
 
 async def get_href(message: types.Message, state: FSMContext):
@@ -118,12 +101,11 @@ async def get_href(message: types.Message, state: FSMContext):
         'восьмая',
         'девятая',
         'десятая',
-        'одинадцатая',
+        'одиннадцатая',
         'двенадцатая',
         'тринадцатая',
         'четырнадцатая',
         'пятнадцатая')
-
     async with state.proxy() as data:
         num = data.get('num')
         if num is None:
@@ -150,11 +132,29 @@ async def get_href(message: types.Message, state: FSMContext):
                                      reply_markup=nv.SuperMenu.kaz_order)
 
 
+async def end_hrefs(message: types.Message, state: FSMContext):
+    texts = f"Вариант-1: \n" \
+            f"Заказ через Казахстан: \n"
+    async with state.proxy() as data:
+        num = data.get('num')
+        for i in range(1, num + 1):
+            key = 'href_' + str(i)
+            link = data.get(key)
+            sstring = str(i) + ". " + link + "\n"
+            texts += sstring
+        await message.answer("Если всё правильно, подтвердите заказ.", reply_markup=nv.SuperMenu.cancel)
+        mini_menu = types.InlineKeyboardMarkup(row_width=1)
+        btn = types.InlineKeyboardButton("Подтвердить заказ", callback_data="KAZ_ORDER_LINKS")
+        mini_menu.add(btn)
+        await message.answer(texts,
+                             reply_markup=mini_menu)
+
+
 def register_handlers_var_1(dp: Dispatcher):
     dp.register_message_handler(order_kaz_start_handler, Text(equals="Заказ через Казахстан"), state=None)
     dp.register_message_handler(make_order_kaz_choice, state=OrderStates.order_kaz_choice)
     dp.register_message_handler(get_shop_name, state=OrderStates.order_kaz_ch1_shop_name)
     dp.register_message_handler(get_login, state=OrderStates.order_kaz_ch1_loggin)
     dp.register_message_handler(get_password, state=OrderStates.order_kaz_ch1_password)
-    dp.register_message_handler(end_hrefs, Text(equals='Завершить заказ'), state=OrderStates.ordder_kaz_ch2_href)
-    dp.register_message_handler(get_href, state=OrderStates.ordder_kaz_ch2_href)
+    dp.register_message_handler(end_hrefs, Text(equals='Завершить заказ'), state=OrderStates.order_kaz_ch2_href)
+    dp.register_message_handler(get_href, state=OrderStates.order_kaz_ch2_href)

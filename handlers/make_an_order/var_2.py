@@ -9,7 +9,7 @@ from create_bot import bot
 from utils.statemachine import TradeInn
 
 
-"""----------------------------ЗАКАЗ ЧЕРЕЗ traideINN"""
+"""----------------------------ЗАКАЗ ЧЕРЕЗ traideINN---------------------------------------------------------"""
 
 
 async def start_tradeinn(message: types.Message):
@@ -34,19 +34,21 @@ async def get_tradeinn_login(message: types.Message, state: FSMContext):
     await TradeInn.pas.set()
 
 
-
 async def get_tradeinn_pass(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['pass'] = message.text
-    await message.answer("Ваш заказ отправлен! Скоро с вами свяжется оператор.")
+    mini_menu = types.InlineKeyboardMarkup(row_width=1)
+    btn = types.InlineKeyboardButton("Подтвердить заказ", callback_data="TRADE_INN")
+    mini_menu.add(btn)
+    await message.answer("Если всё правильно, подтвердите заказ.", reply_markup=nv.SuperMenu.cancel)
     await message.answer(md.text(
-        md.text(md.italic('TradeInn')),
-        md.text('Номер заказа:', md.code(random.randint(1000, 9999))),
+        md.text("Вариант-2", "Закаказ через TradeInn",sep="\n"),
         md.text('Логин: ', md.bold(data.get('login'))),
         md.text("Пaроль:", md.bold(data.get('pass'))),
         sep='\n'),
-        parse_mode=ParseMode.MARKDOWN)
-    await state.finish()
+        parse_mode=ParseMode.MARKDOWN,
+        reply_markup=mini_menu)
+
 
 def register_handlers_var_2(dp: Dispatcher):
     dp.register_message_handler(start_tradeinn, Text(equals='Заказ Tradeinn'), state=None)

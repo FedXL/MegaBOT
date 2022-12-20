@@ -4,10 +4,11 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
 from aiogram.types import ParseMode
 import utils.markap_menu as nv
-from create_bot import dp
 import aiogram.utils.markdown as md
-
 from utils.statemachine import BuyOut
+
+
+"""-------------------------------------ВЫКУП ЗАКАЗА-------------------------------------------------------"""
 
 
 async def start_buyout(message: types.Message):
@@ -15,7 +16,6 @@ async def start_buyout(message: types.Message):
                          "Название сайта , пароль и логин от личного кабинета.")
     await message.answer('Введите сайт магазина:', reply_markup=nv.SuperMenu.cancel)
     await BuyOut.shop.set()
-
 
 
 async def get_buyout_shop(message: types.Message, state: FSMContext):
@@ -37,17 +37,21 @@ async def get_buyout_login(message: types.Message, state: FSMContext):
 async def get_buyout_pass(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['pass'] = message.text
-    await message.answer('Ваш заказ отправлен! Скоро с вами свяжется оператор.')
+    await message.answer('Если всё правильно, подтвердите заказ.',reply_markup=nv.SuperMenu.cancel)
+    mini_menu = types.InlineKeyboardMarkup(row_width=1)
+    btn = types.InlineKeyboardButton("Подтвердить заказ", callback_data="TRADE_INN")
+    mini_menu.add(btn)
     await message.answer(md.text(
-        md.text("ransom"),
-        md.text('Заказ номер', md.code(random.randint(1000, 9999))),
+        md.text("Вариант-3"),
+        md.text("Выкуп через посредника"),
         md.text('Магазин: ', md.bold(data.get('shop'))),
         md.text('Логин;', md.bold(data.get('login'))),
         md.text('Пароль: ', md.bold(data.get('pass'))),
         sep='\n'),
-        reply_markup=nv.SuperMenu.cancel,
+        reply_markup=mini_menu,
         parse_mode=ParseMode.MARKDOWN)
-    await state.finish()
+
+
 
 def register_handlers_var_3(dp: Dispatcher):
     dp.register_message_handler(start_buyout, Text(equals='Выкуп заказа'), state=None)

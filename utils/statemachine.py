@@ -6,7 +6,7 @@ class OrderStates(StatesGroup):
     order_kaz_ch1_shop_name = State()
     order_kaz_ch1_loggin = State()
     order_kaz_ch1_password = State()
-    ordder_kaz_ch2_href = State()
+    order_kaz_ch2_href = State()
     menu = State()
     advice = State()
 
@@ -33,6 +33,6 @@ class Calculator_1(StatesGroup):
 
 
 class Calculator_2(StatesGroup):
-    eurobacs = State()
-    getmoney = State()
+    euro_usd = State()
+    get_money = State()
     result = State()

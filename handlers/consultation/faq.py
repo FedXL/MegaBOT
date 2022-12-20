@@ -19,8 +19,6 @@ async def hello_faq(message: Message):
     await FAQ.start.set()
 
 
-
-
 async def generate_faq(message: Message):
     mini_menu = types.InlineKeyboardMarkup(row_width=1)
 
@@ -75,10 +73,6 @@ async def return_to_faq(query: CallbackQuery):
                            reply_markup=nv.SuperMenu.faqMenu,
                            parse_mode=ParseMode.MARKDOWN)
     await FAQ.start.set()
-
-
-
-
 
 
 def register_handlers_faq(dp: Dispatcher):

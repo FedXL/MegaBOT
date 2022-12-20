@@ -14,7 +14,7 @@ async def zero_calculator_handler(message: types.Message):
         await Calculator_1.eurobacs.set()
         await message.answer("Хорошо. Выберите теперь валюту для расчёта:", reply_markup=nv.SuperMenu.EuroBaksMenu)
     elif message.text == "Посчитать примерную стоимость по выкупу заказа":
-        await Calculator_2.eurobacs.set()
+        await Calculator_2.euro_usd.set()
         await message.answer("Хорошо. Выберите теперь валюту для расчёта:", reply_markup=nv.SuperMenu.EuroBaksMenu)
 
 
@@ -93,14 +93,14 @@ async def calculator_2(message: types.Message, state: FSMContext):
         await message.answer(f"Валюта: {message.text}, Теперь введите полную сумму корзины вместе"
                              f" с доставкой:",
                              reply_markup=nv.SuperMenu.cancel)
-        await Calculator_2.getmoney.set()
+        await Calculator_2.get_money.set()
         async with state.proxy() as data:
             data['eurobaks'] = message.text
     else:
         await message.reply("Непонятная команда, пожалуйста воспользуйтесь кнопками меню.")
 
 
-# @dp.message_handler(state=Calculator_2.getmoney)
+# @dp.message_handler(state=Calculator_2.get_money)
 async def getmoney2(message: types.Message, state: FSMContext):
     if message.text.isdigit():
         async with state.proxy() as data:
@@ -152,6 +152,6 @@ def register_handlers_calculator(dp: Dispatcher):
                                              "Посчитать примерную стоимость по выкупу заказа"]),
                                 state="*")
     dp.register_message_handler(getmoney1, state=Calculator_1.getmoney),
-    dp.register_message_handler(getmoney2, state=Calculator_2.getmoney),
+    dp.register_message_handler(getmoney2, state=Calculator_2.get_money),
     dp.register_message_handler(calculator_1, state=Calculator_1.eurobacs),
-    dp.register_message_handler(calculator_2, state=Calculator_2.eurobacs)
+    dp.register_message_handler(calculator_2, state=Calculator_2.euro_usd)

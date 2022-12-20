@@ -4,7 +4,6 @@ from aiogram.types import ParseMode, CallbackQuery
 import utils.markap_menu as nv
 from create_bot import bot
 import aiogram.utils.markdown as md
-
 from utils.statemachine import FAQ, OrderStates, TradeInn, BuyOut
 
 
@@ -22,6 +21,7 @@ async def started_order_handler(message: types.Message):
 
 
 async def return_to_orders(query: CallbackQuery):
+    """ Обработчик возврата к заказу из раздела FAQ"""
     income = query.data
     match income:
         case "KAZ":

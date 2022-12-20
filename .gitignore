@@ -5,3 +5,4 @@ venv
 /app/__pycache__
 */__pycache__
 /utils/config.py
+**/__pycache__

@@ -42,7 +42,7 @@ async def back_btn_function(message: types.Message, state: FSMContext):
                                  'либо предоставить прямые ссылки на товары. Выбор за вами:',
                                  reply_markup=nv.SuperMenu.kaz_choice_menu)
 
-        case "OrderStates:ordder_kaz_ch2_href":
+        case "OrderStates:order_kaz_ch2_href":
             await OrderStates.order_kaz_choice.set()
             await message.answer('Вы вернулись назад! Теперь нам нужно получить либо доступ'
                                  ' к корзине в магазине, '
@@ -70,22 +70,22 @@ async def back_btn_function(message: types.Message, state: FSMContext):
             await message.answer('Вы вернулись назад в меню консультаций!',
                                  reply_markup=nv.SuperMenu.consMenu)
 
-        case "Calculator_1:eurobacs":
+        case "Calculator_1:euro_usd":
             await state.finish()
             await message.answer("Вы вернулись в меню консультаций.",
                                  reply_markup=nv.SuperMenu.consMenu)
 
-        case "Calculator_1:getmoney":
+        case "Calculator_1:get_money":
             await state.finish()
             await message.answer("Вы вернулись в меню консультаций.",
                                  reply_markup=nv.SuperMenu.consMenu)
 
-        case "Calculator_2:eurobacs":
+        case "Calculator_2:euro_usd":
             await state.finish()
             await message.answer("Вы вернулись в меню консультаций.",
                                  reply_markup=nv.SuperMenu.consMenu)
 
-        case "Calculator_2:getmoney":
+        case "Calculator_2:get_money":
             await state.finish()
             await message.answer("Вы вернулись в меню консультаций.",
                                  reply_markup=nv.SuperMenu.consMenu)
