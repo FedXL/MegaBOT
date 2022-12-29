@@ -5,13 +5,13 @@ from aiogram.types import ParseMode
 
 import utils.markap_menu as nv
 from utils.statemachine import Calculator_1, Calculator_2
-from create_bot import usd,eur
+from utils.exchange import get_exchange_lockal
 import aiogram.utils.markdown as md
 
 
 async def zero_calculator_handler(message: types.Message):
     if message.text == "Посчитать примерную стоимость заказа транзитом через Казахстан":
-        await Calculator_1.eurobacs.set()
+        await Calculator_1.euro_usd.set()
         await message.answer("Хорошо. Выберите теперь валюту для расчёта:", reply_markup=nv.SuperMenu.EuroBaksMenu)
     elif message.text == "Посчитать примерную стоимость по выкупу заказа":
         await Calculator_2.euro_usd.set()
@@ -23,7 +23,7 @@ async def calculator_1(message: types.Message, state: FSMContext):
         await message.answer(f"Валюта: {message.text}, Теперь введите полную сумму корзины вместе"
                              f" с доставкой в Казахстан:",
                              reply_markup=nv.SuperMenu.cancel)
-        await Calculator_1.getmoney.set()
+        await Calculator_1.get_money.set()
         async with state.proxy() as data:
             data['eurobaks'] = message.text
     else:
@@ -31,14 +31,15 @@ async def calculator_1(message: types.Message, state: FSMContext):
 
 
 async def getmoney1(message: types.Message, state: FSMContext):
+    money_rate = get_exchange_lockal()
     if message.text.isdigit():
         async with state.proxy() as data:
             valuta = data.get('eurobaks')
         if valuta == "Евро":
-            valuta = eur
+            valuta = money_rate.eur
             pref = "Евро"
         elif valuta == "Доллар":
-            valuta = usd
+            valuta = money_rate.usd
             pref = "Доллар"
         else:
             await message.answer(f"Что то пошло сильно не так. Валюта = {valuta}")
@@ -58,6 +59,8 @@ async def getmoney1(message: types.Message, state: FSMContext):
         total1 = int(message.text) * 1.25 * valuta + 1000
         total2 = int(message.text) * 1.25 * valuta + 3000
         text1 = "Cумма к оплате составит:"
+    total1 = int(total1)
+    total2 = int(total2)
     await message.answer(md.text(
         md.text("Cумма="),
         md.text(" "),
@@ -102,14 +105,15 @@ async def calculator_2(message: types.Message, state: FSMContext):
 
 # @dp.message_handler(state=Calculator_2.get_money)
 async def getmoney2(message: types.Message, state: FSMContext):
+    money_rate = get_exchange_lockal()
     if message.text.isdigit():
         async with state.proxy() as data:
             valuta = data.get('eurobaks')
         if valuta == "Евро":
-            valuta = eur
+            valuta = money_rate.eur
             pref = "Евро"
         elif valuta == "Доллар":
-            valuta = usd
+            valuta = money_rate.usd
             pref = "Доллар"
         else:
             await message.answer(f"Что то пошло сильно не так. Валюта = {valuta}")
@@ -151,7 +155,7 @@ def register_handlers_calculator(dp: Dispatcher):
                                 Text(equals=["Посчитать примерную стоимость заказа транзитом через Казахстан",
                                              "Посчитать примерную стоимость по выкупу заказа"]),
                                 state="*")
-    dp.register_message_handler(getmoney1, state=Calculator_1.getmoney),
+    dp.register_message_handler(getmoney1, state=Calculator_1.get_money),
     dp.register_message_handler(getmoney2, state=Calculator_2.get_money),
-    dp.register_message_handler(calculator_1, state=Calculator_1.eurobacs),
+    dp.register_message_handler(calculator_1, state=Calculator_1.euro_usd),
     dp.register_message_handler(calculator_2, state=Calculator_2.euro_usd)

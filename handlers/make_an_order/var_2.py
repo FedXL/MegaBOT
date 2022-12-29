@@ -38,13 +38,13 @@ async def get_tradeinn_pass(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['pass'] = message.text
     mini_menu = types.InlineKeyboardMarkup(row_width=1)
-    btn = types.InlineKeyboardButton("Подтвердить заказ", callback_data="TRADE_INN")
+    btn = types.InlineKeyboardButton("Подтвердить заказ", callback_data="TRADEINN")
     mini_menu.add(btn)
     await message.answer("Если всё правильно, подтвердите заказ.", reply_markup=nv.SuperMenu.cancel)
     await message.answer(md.text(
-        md.text("Вариант-2", "Закаказ через TradeInn",sep="\n"),
-        md.text('Логин: ', md.bold(data.get('login'))),
-        md.text("Пaроль:", md.bold(data.get('pass'))),
+        md.text("Вариант 2.", "Заказ через TradeInn",sep="\n"),
+        md.text('Логин: ', f"*{data.get('login')}*"),
+        md.text("Пaроль: ", f"*{data.get('pass')}*"),
         sep='\n'),
         parse_mode=ParseMode.MARKDOWN,
         reply_markup=mini_menu)

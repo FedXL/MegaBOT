@@ -246,6 +246,20 @@ def make_user_info_report(query: CallbackQuery) -> md.text():
     return result
 
 
+
+def order_answer_vocabulary(income):
+    match income:
+        case 'KAZ_ORDER_LINKS':
+            text = ['Вариант 1','Заказ через Казахстан', 'ссылки']
+        case 'KAZ_ORDER_CABINET':
+            text = ['Вариант 1','Заказ через Казахстан', 'доступ в кабинет']
+        case 'TRADEINN':
+            text = ['Вариант 2','Заказ через TradeInn' ]
+        case 'PAYMENT':
+            text = ['Вариант 3', 'Выкуп через посредника']
+    return text
+
+
 def make_links_info_text(links):
     counter = create_counter()
     md_obj = [md.link("ссылка "+str(counter()), link) for link in links]

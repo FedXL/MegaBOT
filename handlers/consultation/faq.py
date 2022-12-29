@@ -1,11 +1,12 @@
 from aiogram import Dispatcher, types
 from aiogram.dispatcher.filters import Text
 from aiogram.types import ParseMode, Message, CallbackQuery
-from create_bot import usd, eur, bot
+from create_bot import bot
 import aiogram.utils.markdown as md
 from utils.statemachine import FAQ
 from utils.texts import make_text_for_FAQ
 import utils.markap_menu as nv
+from utils.exchange import get_exchange_lockal
 
 
 async def hello_faq(message: Message):
@@ -21,6 +22,9 @@ async def hello_faq(message: Message):
 
 async def generate_faq(message: Message):
     mini_menu = types.InlineKeyboardMarkup(row_width=1)
+    money_rate = get_exchange_lockal()
+    eur = money_rate.eur
+    usd = money_rate.usd
 
 
     if message.text == "Покупка транзитом через Казахстан":

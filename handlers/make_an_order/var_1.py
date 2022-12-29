@@ -83,9 +83,9 @@ async def get_password(message: types.Message, state):
         await bot.send_message(message.chat.id,
                                md.text(
                                    md.text("Вариант 1",'Заказ через казахстан', sep="\n"),
-                                   md.text('Магазин: ', md.bold(data['shop'])),
-                                   md.text('Логин:   ', md.bold(data['log'])),
-                                   md.text('Пароль:  ', md.bold(data['pass'])),
+                                   md.text('Магазин: ', f"*{data.get('shop')}*"),
+                                   md.text('Логин;', f"*{data.get('log')}*"),
+                                   md.text('Пароль: ', f"*{data.get('pass')}*"),
                                    sep='\n'),
                                reply_markup=mini_menu,
                                parse_mode=ParseMode.MARKDOWN,
@@ -136,7 +136,7 @@ async def get_href(message: types.Message, state: FSMContext):
 
 
 async def end_hrefs(message: types.Message, state: FSMContext):
-    texts = [f"Вариант-1:",
+    texts = [f"Вариант 1.",
             f"Заказ через Казахстан."]
     async with state.proxy() as data:
         hrefs = [data.get(key) for key in

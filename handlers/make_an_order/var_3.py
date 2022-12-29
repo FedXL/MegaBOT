@@ -37,14 +37,14 @@ async def get_buyout_pass(message: types.Message, state: FSMContext):
         data['pass'] = message.text
     await message.answer('Если всё правильно, подтвердите заказ.', reply_markup=nv.SuperMenu.cancel)
     mini_menu = types.InlineKeyboardMarkup(row_width=1)
-    btn = types.InlineKeyboardButton("Подтвердить заказ", callback_data="TRADE_INN")
+    btn = types.InlineKeyboardButton("Подтвердить заказ", callback_data="PAYMENT")
     mini_menu.add(btn)
     await message.answer(md.text(
-        md.text("Вариант-3"),
+        md.text("Вариант 3."),
         md.text("Выкуп через посредника"),
-        md.text('Магазин: ', md.bold(data.get('shop'))),
-        md.text('Логин;', md.bold(data.get('login'))),
-        md.text('Пароль: ', md.bold(data.get('pass'))),
+        md.text('Магазин: ', f"*{data.get('shop')}*"),
+        md.text('Логин;', f"*{data.get('login')}*"),
+        md.text('Пароль: ', f"*{data.get('pass')}*"),
         sep='\n'),
         reply_markup=mini_menu,
         parse_mode=ParseMode.MARKDOWN)

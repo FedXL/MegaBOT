@@ -27,8 +27,8 @@ class FAQ(StatesGroup):
 
 
 class Calculator_1(StatesGroup):
-    eurobacs = State()
-    getmoney = State()
+    euro_usd = State()
+    get_money = State()
     result = State()
 
 

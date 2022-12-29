@@ -13,15 +13,11 @@ from handlers.make_an_order.var_2 import register_handlers_var_2
 from handlers.make_an_order.var_3 import register_handlers_var_3
 from handlers.save_orders.orders_callback import register_handlers_save_order
 from utils import markap_menu as nv
-
-
 from utils.texts import make_text_hello
 
 
 async def on_startup(_):
     print("Бот вышел в онлайн")
-
-
 @dp.message_handler(commands=['start'], state="*")
 async def welcome_message(message: types.Message, state: FSMContext):
     """
@@ -38,12 +34,9 @@ async def welcome_message(message: types.Message, state: FSMContext):
 @dp.message_handler(commands=['info'], state="*")
 async def info_func(message: types.Message, state: FSMContext):
     value = await state.get_state()
-    print("state == ",value)
+    print("state == ", value)
 
-
-
-
-if __name__ == "__main__":
+def main():
     register_handlers_save_order(dp)
     register_handlers_btn(dp)
     register_handlers_othersCons(dp)
@@ -57,4 +50,8 @@ if __name__ == "__main__":
                            skip_updates=True,
                            on_startup=on_startup
                            )
+
+
+if __name__ == "__main__":
+    main()
 

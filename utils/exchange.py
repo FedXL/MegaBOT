@@ -1,20 +1,21 @@
+import os
 from collections import namedtuple
-import requests
 
-rate = namedtuple("Rate", "eur usd date")
+def get_exchange_lockal():
+    script_dir = os.path.dirname(__file__)
+    rel_path = "exchange.txt"
+    abs_file_path = os.path.join(script_dir, rel_path)
+
+    with open(abs_file_path, 'r') as file:
+        line = file.readline()
+        print("get money")
+        print(line)
+        line_p = line.split("|")
+        print(line_p)
+        rate = namedtuple("Rate", "eur usd date")
+        rate.usd = float(line_p[0])
+        rate.eur = float(line_p[1])
+        rate.date = line_p[2]
+    return rate
 
 
-def get_exchange():
-    try:
-        data = requests.get('https://www.cbr-xml-daily.ru/daily_json.js').json()
-    except:
-        print("Курс валют не получен")
-    usd = data['Valute']['USD']['Value']
-    eur = data['Valute']['EUR']['Value']
-    print(f'usd {usd},eur {eur}')
-    date = (data['Timestamp'].split('T'))
-    return rate(eur=eur, usd=usd, date=date)
-
-
-if __name__ == '__main__':
-    get_exchange()
