@@ -1,4 +1,3 @@
-import random
 from aiogram import types, Dispatcher
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
@@ -83,12 +82,12 @@ async def get_password(message: types.Message, state):
         await bot.send_message(message.chat.id,
                                md.text(
                                    md.text("Вариант 1",'Заказ через казахстан', sep="\n"),
-                                   md.text('Магазин: ', f"*{data.get('shop')}*"),
-                                   md.text('Логин;', f"*{data.get('log')}*"),
-                                   md.text('Пароль: ', f"*{data.get('pass')}*"),
+                                   md.text('Магазин: ', f"<b>{data.get('shop')}</b>"),
+                                   md.text('Логин:', f"<b>{data.get('log')}</b>"),
+                                   md.text('Пароль: ', f"<b>{data.get('pass')}</b>"),
                                    sep='\n'),
                                reply_markup=mini_menu,
-                               parse_mode=ParseMode.MARKDOWN,
+                               parse_mode=ParseMode.HTML,
                                )
 
 
@@ -143,14 +142,15 @@ async def end_hrefs(message: types.Message, state: FSMContext):
                  [('href_' + str(key)) for key in
                   [i for i in range(1, data.get('num') + 1)]]]
         addition = make_links_info_text(hrefs)
-
         await message.answer("Если всё правильно, подтвердите заказ.", reply_markup=nv.SuperMenu.cancel)
         mini_menu = types.InlineKeyboardMarkup(row_width=1)
         btn = types.InlineKeyboardButton("Подтвердить заказ", callback_data="KAZ_ORDER_LINKS")
         mini_menu.add(btn)
-        await message.answer(md.text(*texts,*addition,sep ="\n"),
+        await message.answer(md.text(*texts, *addition,sep ="\n"),
                              reply_markup=mini_menu,
-                             parse_mode=ParseMode.MARKDOWN)
+                             disable_web_page_preview=True,
+                             parse_mode=ParseMode.HTML
+                             )
 
 
 def register_handlers_var_1(dp: Dispatcher):

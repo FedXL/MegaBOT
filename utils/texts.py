@@ -1,6 +1,7 @@
 import random
 
 import aiogram.utils.markdown as md
+from aiogram import types
 from aiogram.types import CallbackQuery
 
 from utils.utils_lite import create_counter
@@ -19,7 +20,7 @@ def make_text_hello(username):
     return text_hello
 
 
-def make_text_for_FAQ(eur: int, usd: int, value: str) -> md.text:
+def make_text_for_FAQ_old(eur: int, usd: int, value: str) -> md.text:
     """Функция генерирует текст для FAQ весь текст редактировать можно здесь.
     Возвращает распарсеный объект текста md.text"""
 
@@ -229,6 +230,17 @@ def make_text_for_FAQ(eur: int, usd: int, value: str) -> md.text:
     return text
 
 
+def make_text_for_FAQ(value:str):
+    try:
+        with open("storages" + value + ".html", "r", ) as fi:
+            result = fi.read()
+            fi.close()
+    except Exception as ex:
+        print("чето пошло не так")
+    return result
+
+
+
 def make_user_info_report(query: CallbackQuery) -> md.text():
     user_id = query.from_user.id
     user_first_name = query.from_user.first_name
@@ -236,8 +248,8 @@ def make_user_info_report(query: CallbackQuery) -> md.text():
     username = query.from_user.username
     result = md.text(
         md.text(f" #{random.randint(1000, 9999)}"),
-        md.text(f"Type: *{query.data}*"),
-        md.text(f"User ID: {user_id}"),
+        md.text(f"Type: <b>{query.data}</b>"),
+        md.text(f"User ID:", md.hlink(f"#{user_id}", f"tg://user?id={user_id}")),
         md.text(f"First Name: {user_first_name}"),
         md.text(f"Second Name: {user_second_name}"),
         md.text(f"UserName :  @{username}"),
@@ -245,6 +257,19 @@ def make_user_info_report(query: CallbackQuery) -> md.text():
     )
     return result
 
+def make_user_info_report_from_message(message: types.Message):
+    user_id = message.from_user.id
+    user_first_name = message.from_user.first_name
+    user_second_name = message.from_user.last_name
+    username = message.from_user.username
+    result = md.text(
+        md.text(f"User ID:", md.hlink(f"#{user_id}", f"tg://user?id={user_id}")),
+        md.text(f"First Name: {user_first_name}"),
+        md.text(f"Second Name: {user_second_name}"),
+        md.text(f"UserName :  @{username}"),
+        sep="\n"
+    )
+    return result
 
 
 def order_answer_vocabulary(income):
@@ -262,5 +287,6 @@ def order_answer_vocabulary(income):
 
 def make_links_info_text(links):
     counter = create_counter()
-    md_obj = [md.link("ссылка "+str(counter()), link) for link in links]
+
+    md_obj = [md.hlink("ссылка "+str(counter()), link) for link in links]
     return md_obj

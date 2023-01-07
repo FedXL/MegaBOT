@@ -25,46 +25,48 @@ async def make_order_answer(query: CallbackQuery, state: FSMContext):
         case "KAZ_ORDER_CABINET":
             async with state.proxy() as data:
                 addition = [
-                    md.text('Магазин: ', f"`{data.get('shop')}`"),
-                    md.text('Логин;', f"`{data.get('log')}`"),
-                    md.text('Пароль: ', f"`{data.get('pass')}`"),
+                    md.text('Магазин: ', f"<code>{data.get('shop')}</code>"),
+                    md.text('Логин: ', f"<code>{data.get('log')}</code>"),
+                    md.text('Пароль: ', f"<code>{data.get('pass')}</code>"),
                 ]
-        case "TRADEINN" :
+        case "TRADEINN":
             async with state.proxy() as data:
                 addition = [
-                    md.text('Логин: ', f"`{data.get('login')}`"),
-                    md.text("Пaроль: ", f"`{data.get('pass')}`")
+                    md.text('Логин: ', f"<code>{data.get('login')}</code>"),
+                    md.text("Пaроль: ", f"<code>{data.get('pass')}</code>")
                 ]
         case "PAYMENT":
             async with state.proxy() as data:
                 addition = [
-                    md.text('Магазин: ', f"`{data.get('shop')}`"),
-                    md.text('Логин;', f"`{data.get('login')}`"),
-                    md.text('Пароль: ', f"`{data.get('pass')}`"),
+                    md.text('Магазин: ', f"<code>{data.get('shop')}</code>"),
+                    md.text('Логин: ', f"<code>{data.get('login')}</code>"),
+                    md.text('Пароль: ', f"<code>{data.get('pass')}</code>"),
                 ]
-
     await state.finish()
     await bot.send_message(query.from_user.id, md.text(
-                            md.text("Уважаемый", query.from_user.username, "!", sep=" "),
-                            md.text("Мы получили ваш заказ:"),
-                            sep="\n"))
+        md.text("Уважаемый", query.from_user.username, "!", sep=" "),
+        md.text("Мы получили ваш заказ:"),
+        sep="\n"))
     await bot.send_message(query.from_user.id, md.text(
-                            md.text(*pre_additional, sep="\n"),
-                            md.text(*addition, sep="\n"),
-                            sep="\n"),
+        md.text(*pre_additional, sep="\n"),
+        md.text(*addition, sep="\n"),
+        sep="\n"),
                            reply_markup=SuperMenu.cancel,
-                           parse_mode=ParseMode.MARKDOWN)
+                           disable_web_page_preview=True,
+                           parse_mode=ParseMode.HTML)
     await bot.send_message(query.from_user.id, md.text("Ваш заказ будет обработан сегодня.",
-                                    "Скоро с вами свяжется наш специалист.", "@ShipKZ",
-                                    sep="\n"))
+                                                       "Скоро с вами свяжется наш специалист.", "@ShipKZ",
+                                                       sep="\n"))
     await bot.send_message(message_id,
                            md.text(md.text(user_info),
                                    md.text(*addition, sep="\n"),
                                    sep="\n"),
-                           parse_mode=ParseMode.MARKDOWN)
+                           disable_web_page_preview=True,
+                           parse_mode=ParseMode.HTML)
 
 
 def register_handlers_save_order(dp: Dispatcher):
     dp.register_callback_query_handler(make_order_answer,
-                                       lambda c: c.data in ['KAZ_ORDER_LINKS','KAZ_ORDER_CABINET', 'TRADEINN', 'PAYMENT'],
+                                       lambda c: c.data in ['KAZ_ORDER_LINKS', 'KAZ_ORDER_CABINET', 'TRADEINN',
+                                                            'PAYMENT'],
                                        state="*")

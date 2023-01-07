@@ -42,12 +42,12 @@ async def get_buyout_pass(message: types.Message, state: FSMContext):
     await message.answer(md.text(
         md.text("Вариант 3."),
         md.text("Выкуп через посредника"),
-        md.text('Магазин: ', f"*{data.get('shop')}*"),
-        md.text('Логин;', f"*{data.get('login')}*"),
-        md.text('Пароль: ', f"*{data.get('pass')}*"),
+        md.text('Магазин: ', f"<b>{data.get('shop')}</b>"),
+        md.text('Логин:', f"<b>{data.get('login')}</b>"),
+        md.text('Пароль: ', f"<b>{data.get('pass')}</b>"),
         sep='\n'),
         reply_markup=mini_menu,
-        parse_mode=ParseMode.MARKDOWN)
+        parse_mode=ParseMode.HTML)
 
 
 def register_handlers_var_3(dp: Dispatcher):

@@ -1,4 +1,4 @@
-# MegaBOT
+# SupportBot
 To start bot u should create config.py in utils
 
 config.py:

@@ -43,10 +43,10 @@ async def get_tradeinn_pass(message: types.Message, state: FSMContext):
     await message.answer("Если всё правильно, подтвердите заказ.", reply_markup=nv.SuperMenu.cancel)
     await message.answer(md.text(
         md.text("Вариант 2.", "Заказ через TradeInn",sep="\n"),
-        md.text('Логин: ', f"*{data.get('login')}*"),
-        md.text("Пaроль: ", f"*{data.get('pass')}*"),
+        md.text('Логин: ', f"<b>{data.get('login')}</b>"),
+        md.text("Пaроль: ", f"<b>{data.get('pass')}</b>"),
         sep='\n'),
-        parse_mode=ParseMode.MARKDOWN,
+        parse_mode=ParseMode.HTML,
         reply_markup=mini_menu)
 
 

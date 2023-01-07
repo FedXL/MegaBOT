@@ -1,8 +1,10 @@
 from aiogram import types
 from aiogram.dispatcher import FSMContext
-from aiogram.types import ParseMode
+from aiogram.types import ParseMode, Message
 from aiogram.utils import executor
 from create_bot import dp, bot
+from handlers.admin.faq_upload import register_handlers_upload_faq
+from handlers.admin.warning import register_handlers_warning
 from handlers.back_btn.btn import register_handlers_btn
 from handlers.consultation.calculator import register_handlers_calculator
 from handlers.consultation.faq import register_handlers_faq
@@ -14,6 +16,12 @@ from handlers.make_an_order.var_3 import register_handlers_var_3
 from handlers.save_orders.orders_callback import register_handlers_save_order
 from utils import markap_menu as nv
 from utils.texts import make_text_hello
+import aiogram.utils.markdown as md
+
+
+
+
+
 
 
 async def on_startup(_):
@@ -23,7 +31,6 @@ async def welcome_message(message: types.Message, state: FSMContext):
     """
     This handler will be called when user sends `/start` or `/help` command
     """
-    # await message.reply(message.chat.id)
     await state.finish()
     text = make_text_hello(message.from_user.username)
     await bot.send_message(message.from_user.id, text,
@@ -35,6 +42,10 @@ async def welcome_message(message: types.Message, state: FSMContext):
 async def info_func(message: types.Message, state: FSMContext):
     value = await state.get_state()
     print("state == ", value)
+    await message.reply(message.chat.id)
+
+
+
 
 def main():
     register_handlers_save_order(dp)
@@ -46,6 +57,8 @@ def main():
     register_handlers_var_3(dp)
     register_handlers_calculator(dp)
     register_handlers_faq(dp)
+    register_handlers_upload_faq(dp)
+    register_handlers_warning(dp)
     executor.start_polling(dp,
                            skip_updates=True,
                            on_startup=on_startup

@@ -30,38 +30,30 @@ async def generate_faq(message: Message):
     if message.text == "Покупка транзитом через Казахстан":
         btn = types.InlineKeyboardButton("Cделать заказ", callback_data="KAZ")
         mini_menu.add(btn)
-        await message.answer(make_text_for_FAQ(eur, usd, 'var_1_1'),
+        await message.answer(make_text_for_FAQ('faq_1'),
                              reply_markup=mini_menu,
-                             parse_mode=ParseMode.MARKDOWN
+                             disable_web_page_preview=True,
+                             parse_mode=ParseMode.HTML
                              )
 
-        await message.answer(make_text_for_FAQ(eur, usd, 'var_1_2'),
-                             parse_mode=ParseMode.MARKDOWN
-                             )
     elif message.text == "Покупка на Tradeinn":
         btn = types.InlineKeyboardButton("Cделать заказ", callback_data="TradeInn")
         mini_menu.add(btn)
-        await message.answer(make_text_for_FAQ(eur, usd, 'var_2_1'),
-                             parse_mode=ParseMode.MARKDOWN,
+        await message.answer(make_text_for_FAQ('faq_2'),
+                             parse_mode=ParseMode.HTML,
+                             disable_web_page_preview=True,
                              reply_markup=mini_menu
                              )
 
-        await message.answer(make_text_for_FAQ(eur, usd, 'var_2_2'),
-                             parse_mode=ParseMode.MARKDOWN,
-                             # reply_markup=nv.SuperMenu.faqMenu
-                             )
 
     elif message.text == "Покупка через почтовых посредников":
         btn = types.InlineKeyboardButton("Cделать заказ", callback_data="Agent")
         mini_menu.add(btn)
-        await message.answer(make_text_for_FAQ(eur, usd, 'var_3_1'),
-                             parse_mode=ParseMode.MARKDOWN,
+        await message.answer(make_text_for_FAQ('faq_3'),
+                             parse_mode=ParseMode.HTML,
+                             disable_web_page_preview=True,
                              reply_markup=mini_menu,
                              )
-
-        await message.answer(make_text_for_FAQ(eur, usd, 'var_3_2'),
-                             parse_mode=ParseMode.MARKDOWN,
-                             reply_markup=nv.SuperMenu.faqMenu)
     else:
         await message.reply("Я такой команды не знаю! Используйте меню для выбора ответа.",
                             reply_markup=nv.SuperMenu.faqMenu)

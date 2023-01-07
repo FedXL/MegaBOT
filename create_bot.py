@@ -5,7 +5,24 @@ from aiogram.dispatcher import Dispatcher
 from utils.config import API_TOKEN
 
 
-logging.basicConfig(level=logging.DEBUG)
+
+
+
+# Set up logging
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# Create a file handler for the logger
+handler = logging.FileHandler('bot.log')
+handler.setLevel(logging.INFO)
+
+# Add the file handler to the logger
+logger.addHandler(handler)
+
+
+
+
+
 storage = MemoryStorage()
 bot = Bot(API_TOKEN)
 dp = Dispatcher(bot=bot,

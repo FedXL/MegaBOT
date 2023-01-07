@@ -1,6 +1,7 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardButton, InlineKeyboardMarkup
 
 
+
 class SuperMenu(KeyboardButton,ReplyKeyboardMarkup):
 
     __btnMain = KeyboardButton('Назад')

@@ -9,7 +9,11 @@ async def make_first_choise_consult (message: types.Message):
 
 
 async def call_consultant (message: types.Message):
-    await message.answer(f"Если наш FAQ не помог, то {NAME} ответит на все ваши вопросы.")
+    btn = types.InlineKeyboardButton("Консультант", url="https://t.me/Ship_KZ")
+    mini_menu = types.InlineKeyboardMarkup(row_width=1)
+    mini_menu.add(btn)
+    await message.answer(f"Нажмите кнопку ниже, чтобы вызвать консультанта.",
+                         reply_markup=mini_menu)
 
 
 def register_handlers_othersCons(dp: Dispatcher):

@@ -7,6 +7,7 @@ import utils.markap_menu as nv
 from utils.statemachine import Calculator_1, Calculator_2
 from utils.exchange import get_exchange_lockal
 import aiogram.utils.markdown as md
+from utils.utils_lite import is_number
 
 
 async def zero_calculator_handler(message: types.Message):
@@ -32,7 +33,10 @@ async def calculator_1(message: types.Message, state: FSMContext):
 
 async def getmoney1(message: types.Message, state: FSMContext):
     money_rate = get_exchange_lockal()
-    if message.text.isdigit():
+    text_from_mess = message.text
+    text_from_mess = text_from_mess.replace(",", ".")
+    if is_number(text_from_mess):
+        text_from_mess = float(text_from_mess)
         async with state.proxy() as data:
             valuta = data.get('eurobaks')
         if valuta == "Евро":
@@ -46,18 +50,20 @@ async def getmoney1(message: types.Message, state: FSMContext):
             return
     else:
         await message.answer(
-            f"Предыдущее сообщение *{message.text}* не похоже на число. Число должно состоять"
-            f" только из цифр, Попробуйте ещё раз.")
+            f" Предыдущее сообщение <b>{message.text}</b> не похоже на число. Число должно состоять"
+            f" только из цифр, Попробуйте ещё раз.",
+            parse_mode=ParseMode.HTML)
         return
-    if int(message.text) > 1000:
-        total1 = int(message.text) * 1.25 * valuta + 1000 + \
-                 (int(message.text) - 1000) * 0.15 * 1.25 * valuta
-        total2 = int(message.text) * 1.25 * valuta + 3000 + \
-                 (int(message.text) - 1000) * 0.15 * 1.25 * valuta
+
+    if int(text_from_mess) > 1000:
+        total1 = int(text_from_mess) * 1.25 * valuta + 1000 + \
+                 (int(text_from_mess) - 1000) * 0.15 * 1.25 * valuta
+        total2 = int(text_from_mess) * 1.25 * valuta + 3000 + \
+                 (int(text_from_mess) - 1000) * 0.15 * 1.25 * valuta
         text1 = "Cумма к оплате вместе с таможенной пошлиной составит:"
     else:
-        total1 = int(message.text) * 1.25 * valuta + 1000
-        total2 = int(message.text) * 1.25 * valuta + 3000
+        total1 = int(text_from_mess) * 1.25 * valuta + 1000
+        total2 = int(text_from_mess) * 1.25 * valuta + 3000
         text1 = "Cумма к оплате составит:"
     total1 = int(total1)
     total2 = int(total2)
@@ -103,10 +109,14 @@ async def calculator_2(message: types.Message, state: FSMContext):
         await message.reply("Непонятная команда, пожалуйста воспользуйтесь кнопками меню.")
 
 
-# @dp.message_handler(state=Calculator_2.get_money)
+
 async def getmoney2(message: types.Message, state: FSMContext):
     money_rate = get_exchange_lockal()
-    if message.text.isdigit():
+    text_from_mess = message.text
+    text_from_mess = text_from_mess.replace(",", ".")
+
+    if is_number(text_from_mess):
+        text_from_mess = float(text_from_mess)
         async with state.proxy() as data:
             valuta = data.get('eurobaks')
         if valuta == "Евро":
@@ -120,15 +130,16 @@ async def getmoney2(message: types.Message, state: FSMContext):
             return
     else:
         await message.answer(
-            f"Ничего не понимаю. Предыдущее сообщение *{message.text}* не похоже на число. Число должно состоять"
-            f"только из цифр, Попробуйте ещё раз.")
+            f"Предыдущее сообщение <b>{message.text}</b> не похоже на число. Число должно состоять"
+            f"только из цифр, Попробуйте ещё раз.",
+            parse_mode=ParseMode.HTML)
         return
 
-    if int(message.text) > 1000:
-        total = int(message.text) * 1.2 * valuta
-        text1 = "Cумма к оплате,без учета таможенной пошлины составит:"
+    if int(text_from_mess) > 1000:
+        total = int(text_from_mess) * 1.2 * valuta
+        text1 = "Cумма к оплате, без учета таможенной пошлины составит:"
     else:
-        total = int(message.text) * 1.2 * valuta
+        total = int(text_from_mess) * 1.2 * valuta
         text1 = "Cумма к оплате составит:"
     await message.answer(md.text(
         md.text("Cумма="),

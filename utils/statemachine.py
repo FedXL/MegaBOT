@@ -36,3 +36,6 @@ class Calculator_2(StatesGroup):
     euro_usd = State()
     get_money = State()
     result = State()
+
+class Admin(StatesGroup):
+    admin = State()
