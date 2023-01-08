@@ -6,7 +6,9 @@ class OrderStates(StatesGroup):
     order_kaz_ch1_shop_name = State()
     order_kaz_ch1_loggin = State()
     order_kaz_ch1_password = State()
+    order_kaz_ch2_shop_name = State()
     order_kaz_ch2_href = State()
+    order_kaz_ch2_comment =State()
     menu = State()
     advice = State()
 

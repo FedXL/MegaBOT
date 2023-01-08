@@ -10,11 +10,12 @@ from utils.texts import make_user_info_report_from_message
 
 
 async def warning (message: types.Message):
-    logging.info("send warning message")
+
     user_id = message.from_user.id
     user_name = message.from_user.username
     text = message.text
     text_info=make_user_info_report_from_message(message)
+    logging.info("send warning message")
     await bot.send_message(rubbish, md.text(
         text_info,
         "Писатель:",

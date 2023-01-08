@@ -287,6 +287,59 @@ def order_answer_vocabulary(income):
 
 def make_links_info_text(links):
     counter = create_counter()
-
     md_obj = [md.hlink("ссылка "+str(counter()), link) for link in links]
     return md_obj
+
+def get_vaflalist(pos=1):
+    if pos==1:
+        result = ('первая',
+        'вторая',
+        'третья',
+        'четвертая',
+        'пятая',
+        'шестая',
+        'седьмая',
+        'восьмая',
+        'девятая',
+        'десятая',
+        'одиннадцатая',
+        'двенадцатая',
+        'тринадцатая',
+        'четырнадцатая',
+        'пятнадцатая')
+    elif pos ==2:
+        result =('первой',
+                 'второй',
+                 'третьей',
+                 'четвертой',
+                 'пятой',
+                 'шестой',
+                 'седьмой',
+                 'восьмой',
+                 'девятой',
+                 'десятой',
+                 'одиннадцатой',
+                 'двенадцатой',
+                 'тринадцатой',
+                 'четырнадцатой',
+                 'пятнадцатой',)
+    return result
+
+def get_additional_from_proxi(data):
+    addition = []
+    hrefs = [data.get(key) for key in [('href_' + str(key)) for key in
+              [i for i in range(1, data.get('num') + 1)]]]
+    comments = [data.get(key) for key in
+                [('comment_' + str(key)) for key in
+                 [i for i in range(1, data.get('num') + 1)]]]
+    link = iter(make_links_info_text(hrefs))
+    comment = iter(comments)
+    addition.append(md.text('shop: ',f"<code>{data['shop']}</code>"))
+    for x in hrefs:
+        new = md.text(next(link), ": ", f"{next(comment)}")
+        addition.append(new)
+    return addition
+
+
+
+

@@ -51,4 +51,7 @@ class SuperMenu(KeyboardButton,ReplyKeyboardMarkup):
     __btnUsd = KeyboardButton("Доллар")
     EuroBaksMenu = ReplyKeyboardMarkup(resize_keyboard=True).add(__btnEuro, __btnUsd).add( __btnMain)
 
+    __btnComment = KeyboardButton("Без комментариев")
+    CommentMenu = ReplyKeyboardMarkup(resize_keyboard=True).add(__btnComment).add(__btnOrder).add(__btnMain)
+
 

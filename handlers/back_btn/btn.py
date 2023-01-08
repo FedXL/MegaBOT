@@ -36,6 +36,7 @@ async def back_btn_function(message: types.Message, state: FSMContext):
                                  reply_markup=nv.SuperMenu.invoiceMenu)
 
         case "OrderStates:order_kaz_ch1_shop_name":
+            await state.finish()
             await OrderStates.order_kaz_choice.set()
             await message.answer('Вы вернулись назад! Теперь нам нужно получить либо доступ'
                                  ' к корзине в магазине, '
@@ -43,6 +44,23 @@ async def back_btn_function(message: types.Message, state: FSMContext):
                                  reply_markup=nv.SuperMenu.kaz_choice_menu)
 
         case "OrderStates:order_kaz_ch2_href":
+            await state.finish()
+            await OrderStates.order_kaz_choice.set()
+            await message.answer('Вы вернулись назад! Теперь нам нужно получить либо доступ'
+                                 ' к корзине в магазине, '
+                                 'либо прямые ссылки на товары. Выбор за вами:',
+                                 reply_markup=nv.SuperMenu.kaz_choice_menu)
+
+        case "OrderStates:order_kaz_ch2_comment":
+            await state.finish()
+            await OrderStates.order_kaz_choice.set()
+            await message.answer('Вы вернулись назад! Теперь нам нужно получить либо доступ'
+                                 ' к корзине в магазине, '
+                                 'либо прямые ссылки на товары. Выбор за вами:',
+                                 reply_markup=nv.SuperMenu.kaz_choice_menu)
+
+        case "OrderStates:order_kaz_ch2_shop_name":
+            await state.finish()
             await OrderStates.order_kaz_choice.set()
             await message.answer('Вы вернулись назад! Теперь нам нужно получить либо доступ'
                                  ' к корзине в магазине, '

@@ -5,7 +5,7 @@ import aiogram.utils.markdown as md
 from create_bot import bot
 from utils.config import message_id
 from utils.markap_menu import SuperMenu
-from utils.texts import make_user_info_report, make_links_info_text, order_answer_vocabulary
+from utils.texts import make_user_info_report, make_links_info_text, order_answer_vocabulary, get_additional_from_proxi
 
 
 async def make_order_answer(query: CallbackQuery, state: FSMContext):
@@ -18,10 +18,7 @@ async def make_order_answer(query: CallbackQuery, state: FSMContext):
     match income:
         case "KAZ_ORDER_LINKS":
             async with state.proxy() as data:
-                hrefs = [data.get(key) for key in
-                         [('href_' + str(key)) for key in
-                          [i for i in range(1, data.get('num') + 1)]]]
-                addition = make_links_info_text(hrefs)
+                addition = get_additional_from_proxi(data)
         case "KAZ_ORDER_CABINET":
             async with state.proxy() as data:
                 addition = [
