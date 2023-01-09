@@ -5,7 +5,7 @@ def ShopValid(text: str)-> bool:
         return False
     except ValueError:
         pass
-    if len (text)> 25:
+    if len (text) > 150:
         return False
     return True
 
